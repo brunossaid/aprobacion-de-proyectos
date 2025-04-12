@@ -23,44 +23,55 @@ public static class ViewProposals
             var proposals = await proposalService.GetAllAsync();
             var userProposals = proposals.Where(p => p.CreateBy == currentUser.Id).ToList();
 
-
-            for(int i = 0; i < userProposals.Count; i++)
+            if(userProposals.Count == 0)
             {
-                var proposal = userProposals[i];
-                Console.Write($"{i + 1}. {proposal.Title} - ");
-                switch(proposal.Status){
-                    case 1:
-                        Console.ForegroundColor = ConsoleColor.DarkYellow;
-                        Console.WriteLine("Pendiente");
-                        break;
-                    case 2:
-                        Console.ForegroundColor = ConsoleColor.Green;
-                        Console.WriteLine("Aprobada");
-                        break;
-                    case 3:
-                        Console.ForegroundColor = ConsoleColor.Red;
-                        Console.WriteLine("Rechazada");
-                        break;
-                }
+                Console.ForegroundColor = ConsoleColor.DarkYellow;
+                Console.WriteLine("No tienes solicitudes de proyecto.");
+                Console.ForegroundColor = ConsoleColor.DarkGray;
+                Console.WriteLine("\nPresiona cualquier tecla para volver al menu principal...");
                 Console.ResetColor();
+                Console.ReadKey();
+                return; 
             }
-            Console.WriteLine("0. Volver al menu principal");
-
-
-            Console.ForegroundColor = ConsoleColor.DarkBlue;
-            Console.Write("Opcion: ");
-            Console.ResetColor();
-
-            if (int.TryParse(Console.ReadLine(), out int selected))
-            {
-                if (selected == 0)
+            else{
+                for(int i = 0; i < userProposals.Count; i++)
                 {
-                    return; // vuelve al menú principal
+                    var proposal = userProposals[i];
+                    Console.Write($"{i + 1}. {proposal.Title} - ");
+                    switch(proposal.Status){
+                        case 1:
+                            Console.ForegroundColor = ConsoleColor.DarkYellow;
+                            Console.WriteLine("Pendiente");
+                            break;
+                        case 2:
+                            Console.ForegroundColor = ConsoleColor.Green;
+                            Console.WriteLine("Aprobada");
+                            break;
+                        case 3:
+                            Console.ForegroundColor = ConsoleColor.Red;
+                            Console.WriteLine("Rechazada");
+                            break;
+                    }
+                    Console.ResetColor();
                 }
-                else if (selected >= 1 && selected <= userProposals.Count)
+                Console.WriteLine("0. Volver al menu principal");
+
+
+                Console.ForegroundColor = ConsoleColor.DarkBlue;
+                Console.Write("Opcion: ");
+                Console.ResetColor();
+
+                if (int.TryParse(Console.ReadLine(), out int selected))
                 {
-                    var selectedProposal = userProposals[selected - 1];
-                    await ViewProposalDetail.Execute(selectedProposal, services, currentUser);
+                    if (selected == 0)
+                    {
+                        return;
+                    }
+                    else if (selected >= 1 && selected <= userProposals.Count)
+                    {
+                        var selectedProposal = userProposals[selected - 1];
+                        await ViewProposalDetail.Execute(selectedProposal, services, currentUser);
+                    }
                 }
             }
         }
