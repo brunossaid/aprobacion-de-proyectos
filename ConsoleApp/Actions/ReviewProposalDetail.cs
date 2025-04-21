@@ -22,7 +22,6 @@ public static class ReviewProposalDetail
             return;
         }
 
-        // mostrar detalles del proposal
         UI.ShowTitle();
         Console.ForegroundColor = ConsoleColor.DarkBlue;
         Console.WriteLine("Revision de solicitud de proyecto");
@@ -35,7 +34,6 @@ public static class ReviewProposalDetail
         Console.WriteLine($"Monto estimado: $ {proposal.EstimatedAmount}");
         Console.WriteLine($"Duración estimada: {proposal.EstimatedDuration} meses\n");
 
-        // elegir nuevo estado
         Console.ForegroundColor = ConsoleColor.DarkBlue;
         Console.WriteLine("Selecciona un nuevo estado:");
         Console.ResetColor();
@@ -56,11 +54,10 @@ public static class ReviewProposalDetail
                 break;
 
             Console.ForegroundColor = ConsoleColor.Red;
-            Console.WriteLine("Selección invalida. Intente nuevamente.");
+            Console.WriteLine("Seleccion invalida. Intente nuevamente.");
             Console.ResetColor();
         }
 
-        // si no es pendiente, agregamos observaciones
         string? observations = null;
         switch (status)
         {
@@ -72,11 +69,9 @@ public static class ReviewProposalDetail
                 Console.ForegroundColor = ConsoleColor.Green;
                 Console.WriteLine("Solicitud Aprobada.");
                 
-                // obtener todos los pasos de este proposal
                 var allSteps = await stepService.GetAllAsync();
                 var relatedSteps = allSteps.Where(s => s.ProjectProposalId == step.ProjectProposalId).ToList();
 
-                // actualizar el proposal si todos los pasos están aprobados
                 bool allApproved = relatedSteps.All(s => s.Id == step.Id || s.Status == 2);
                 if (allApproved)
                 {
@@ -89,7 +84,6 @@ public static class ReviewProposalDetail
                 Console.ForegroundColor = ConsoleColor.Red;
                 Console.WriteLine("Solicitud rechazada.");
 
-                // si se rechaza un paso, se rechaza el proposal
                 if (proposal != null)
                 {
                     proposal.Status = 3;
@@ -111,7 +105,6 @@ public static class ReviewProposalDetail
             observations = Console.ReadLine();
         }
 
-        // guardar
         step.Status = status;
         step.Observations = observations;
         step.DecisionDate = DateTime.Now;

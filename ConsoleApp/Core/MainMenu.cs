@@ -11,7 +11,6 @@ public static class MainMenu
 {
     public static async Task Execute(User currentUser, IServiceProvider services)
     {
-        // solicitudes para revisar
         var stepService = services.GetRequiredService<IProjectApprovalStepService>();
         while (true)
         {

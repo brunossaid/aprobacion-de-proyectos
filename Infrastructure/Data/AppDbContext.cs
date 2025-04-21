@@ -5,7 +5,6 @@ namespace Infrastructure.Data
 {
     public class AppDbContext : DbContext
     {
-        // db sets
         public DbSet<User> User => Set<User>();
         public DbSet<ApproverRole> ApproverRole => Set<ApproverRole>();
         public DbSet<ApprovalStatus> ApprovalStatus => Set<ApprovalStatus>();
@@ -15,16 +14,13 @@ namespace Infrastructure.Data
         public DbSet<ProjectApprovalStep> ProjectApprovalStep => Set<ProjectApprovalStep>();
         public DbSet<ApprovalRule> ApprovalRule => Set<ApprovalRule>();
 
-        // constructor
         public AppDbContext(DbContextOptions<AppDbContext> options) : base(options) { }
 
-        // configuraion de la db
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
             optionsBuilder.UseSqlServer(@"Server=localhost\SQLEXPRESS;Database=AprobacionProyectosDB;Trusted_Connection=True;TrustServerCertificate=True;");
         }
 
-        // relaciones y datos iniciales
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             base.OnModelCreating(modelBuilder);

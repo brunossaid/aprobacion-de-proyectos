@@ -7,7 +7,6 @@ public class ProjectType
     [MaxLength(25)]
     public string Name { get; set; } = null!;
 
-    // relations
     public ICollection<ProjectProposal> ProjectProposals { get; set; } = new List<ProjectProposal>();
     public ICollection<ApprovalRule> AppovalRules { get; set; } = new List<ApprovalRule>();
 }

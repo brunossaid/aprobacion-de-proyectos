@@ -15,7 +15,6 @@ public static class ReviewProposals
         var steps = await stepService.GetAllAsync();
         var proposals = await proposalService.GetAllAsync();
 
-        // filtrar steps pendientes, coincidan con el role del usuario actual y que los anteriores esten aprobados
         var pendingSteps = steps
             .Where(step =>
                 step.ApproverRoleId == currentUser.Role &&          

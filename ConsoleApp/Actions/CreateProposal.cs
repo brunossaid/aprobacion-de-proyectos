@@ -182,7 +182,7 @@ public static class CreateProposal
             if (confirmation != "s" && confirmation != "n")
             {
                 Console.ForegroundColor = ConsoleColor.Red;
-                Console.WriteLine("Opcion invalida. Por favor, ingrese 's' para sí o 'n' para no.");
+                Console.WriteLine("Opcion invalida. Por favor, ingrese 's' para si o 'n' para no.");
                 Console.ResetColor();
             }
         }

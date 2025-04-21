@@ -14,13 +14,11 @@ public class ProjectProposal
     public DateTime CreateAt { get; set; }
 
 
-    // foreign keys
     public int Area { get; set; }
     public int Type { get; set; }
     public int Status { get; set; }
     public int CreateBy { get; set; }
 
-    // navigation properties
     public Area AreaNavigation { get; set; } = null!;
     public ProjectType TypeNavigation { get; set; } = null!;
     public ApprovalStatus StatusNavigation { get; set; } = null!;

@@ -7,12 +7,10 @@ public class ApprovalRule
     public decimal MaxAmount { get; set; }
     public int StepOrder { get; set; }
 
-    // foreign keys
     public int? Area { get; set; }
     public int? Type { get; set; }
     public int ApproverRoleId { get; set; }
 
-    // navigation properties
     public Area? AreaNavigation { get; set; }
     public ProjectType? TypeNavigation { get; set; }
     public ApproverRole ApproverRoleNavigation { get; set; } = null!;

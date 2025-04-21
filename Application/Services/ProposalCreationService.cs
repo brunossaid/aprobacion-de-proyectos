@@ -21,13 +21,10 @@ namespace Application.Services
 
         public async Task CreateProposalWithStepsAsync(ProjectProposal proposal)
         {
-            // generar GUID manualmente
             proposal.Id = Guid.NewGuid();
 
-            // guardar propuesta
             await _proposalService.CreateAsync(proposal);
 
-            // filtrar por las reglas que coincidan con el monto estimado
             var allRules = await _approvalRuleService.GetAllAsync();
             var applicableRules = allRules
                 .Where(r =>
@@ -35,7 +32,6 @@ namespace Application.Services
                     (r.MaxAmount == 0 || proposal.EstimatedAmount <= r.MaxAmount))
                 .ToList();
 
-            // agrupar por stepOrder y seleccionar la mas especifica
             var selectedRules = applicableRules
                 .GroupBy(r => r.StepOrder)
                 .Select(group => group
@@ -44,7 +40,6 @@ namespace Application.Services
                     .First())
                 .ToList();
 
-            // crear ProjectApprovalSteps
             foreach (var rule in selectedRules)
             {
                 var step = new ProjectApprovalStep

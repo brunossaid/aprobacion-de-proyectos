@@ -9,9 +9,7 @@ public class User
     [MaxLength(100)]
     public string Email { get; set; } = null!;
 
-    // foreign keys
     public int Role { get; set; }
 
-    // navigation properties
     public ApproverRole RoleNavigation { get; set; } = null!;
 }
