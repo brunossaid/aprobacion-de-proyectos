@@ -79,6 +79,12 @@ public static class ViewProposalDetail
                 Console.ResetColor();
                 Console.WriteLine($"Observacion: {step.Observations}");
             }
+            else
+            {
+                Console.ForegroundColor = ConsoleColor.DarkGray;
+                Console.WriteLine("No se agrego ninguna observacion.");
+            }
+            Console.WriteLine("");
 
             Console.ResetColor();
         }

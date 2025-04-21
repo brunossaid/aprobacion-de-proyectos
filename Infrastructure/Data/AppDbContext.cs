@@ -80,7 +80,7 @@ namespace Infrastructure.Data
                 new ApprovalRule { Id = 10, MinAmount = 0, MaxAmount = 50000, Area = null, Type = 4, StepOrder = 1, ApproverRoleId = 1 }
             );
 
-            // relationes
+            // relaciones
             // ApprovalRule
             modelBuilder.Entity<ApprovalRule>()
                 .HasOne(a => a.AreaNavigation)

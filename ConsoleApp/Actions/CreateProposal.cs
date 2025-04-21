@@ -114,11 +114,22 @@ public static class CreateProposal
         Console.Write("Monto estimado: ");
         Console.ResetColor();
         decimal estimatedAmount;
-        while (!decimal.TryParse(Console.ReadLine(), out estimatedAmount) || estimatedAmount <= 0)
+        while (true)
         {
-            Console.ForegroundColor = ConsoleColor.Red;
-            Console.Write("Por favor, ingrese un monto valido mayor a 0: ");
-            Console.ResetColor();
+            string input = Console.ReadLine()!;
+            if (!decimal.TryParse(input, out estimatedAmount) || estimatedAmount <= 0)
+            {
+                Console.ForegroundColor = ConsoleColor.Red;
+                Console.Write("Por favor, ingrese un monto valido mayor a 0: ");
+                Console.ResetColor();
+            }
+            else if (estimatedAmount > 1_000_000_000)
+            {
+                Console.ForegroundColor = ConsoleColor.Red;
+                Console.Write("El monto no puede superar los $1.000.000.000: ");
+                Console.ResetColor();
+            }
+            else break;
         }
 
         // duracion estimada
@@ -126,11 +137,22 @@ public static class CreateProposal
         Console.Write("Duracion estimada del proyecto (en meses): ");
         Console.ResetColor();
         int estimatedDuration;
-        while (!int.TryParse(Console.ReadLine(), out estimatedDuration) || estimatedDuration <= 0)
+        while (true)
         {
-            Console.ForegroundColor = ConsoleColor.Red;
-            Console.Write("Por favor, ingrese una cantidad valida de meses: ");
-            Console.ResetColor();
+            string input = Console.ReadLine()!;
+            if (!int.TryParse(input, out estimatedDuration) || estimatedDuration <= 0)
+            {
+                Console.ForegroundColor = ConsoleColor.Red;
+                Console.Write("Por favor, ingrese una cantidad valida de meses: ");
+                Console.ResetColor();
+            }
+            else if (estimatedDuration > 1200)
+            {
+                Console.ForegroundColor = ConsoleColor.Red;
+                Console.Write("La duracion no puede superar los 1200 meses: ");
+                Console.ResetColor();
+            }
+            else break;
         }
 
         // confirmacion
