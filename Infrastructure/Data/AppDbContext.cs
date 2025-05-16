@@ -16,10 +16,12 @@ namespace Infrastructure.Data
 
         public AppDbContext(DbContextOptions<AppDbContext> options) : base(options) { }
 
+        /*
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
             optionsBuilder.UseSqlServer(@"Server=localhost\SQLEXPRESS;Database=AprobacionProyectosDB;Trusted_Connection=True;TrustServerCertificate=True;");
         }
+        */
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
