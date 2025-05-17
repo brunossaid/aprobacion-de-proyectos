@@ -1,31 +1,31 @@
 using Microsoft.AspNetCore.Mvc;
 using Application.Interfaces;
 using Application.DTOs;
-using Domain.Entities;
+using AutoMapper;
 
-namespace API.Controllers;
-
-[ApiController]
-[Route("api/[controller]")]
-public class ProjectTypeController : ControllerBase
+namespace API.Controllers
 {
-    private readonly IProjectTypeService _projectTypeService;
-
-    public ProjectTypeController(IProjectTypeService projectTypeService)
+    [ApiController]
+    [Route("api/[controller]")]
+    [Tags("Information")]
+    public class ProjectTypeController : ControllerBase
     {
-        _projectTypeService = projectTypeService;
-    }
+        private readonly IProjectTypeService _projectTypeService;
+        private readonly IMapper _mapper;
 
-    [HttpGet]
-    public async Task<ActionResult<IEnumerable<ProjectTypeDto>>> GetAll()
-    {
-        var types = await _projectTypeService.GetAllAsync();
-        var typeDtos = types.Select(t => new ProjectTypeDto
+        public ProjectTypeController(IProjectTypeService projectTypeService, IMapper mapper)
         {
-            Id = t.Id,
-            Name = t.Name
-        });
+            _projectTypeService = projectTypeService;
+            _mapper = mapper;
+        }
 
-        return Ok(typeDtos);
+        [HttpGet]
+        public async Task<ActionResult<IEnumerable<ProjectTypeDto>>> GetAll()
+        {
+            var types = await _projectTypeService.GetAllAsync();
+            var typeDtos = _mapper.Map<IEnumerable<ProjectTypeDto>>(types);
+
+            return Ok(typeDtos);
+        }
     }
 }

@@ -2,6 +2,8 @@ using Application.Interfaces;
 using Infrastructure.Data;
 using Infrastructure.Services;
 using Microsoft.EntityFrameworkCore;
+using API.Profiles;
+using Application.Services;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -10,6 +12,7 @@ var connectionString = builder.Configuration.GetConnectionString("DefaultConnect
 builder.Services.AddControllers(); 
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
+builder.Services.AddAutoMapper(typeof(MappingProfile));
 builder.Services.AddDbContext<AppDbContext>(options =>
     options.UseSqlServer(connectionString));
 
@@ -19,6 +22,10 @@ builder.Services.AddScoped<IProjectTypeService, ProjectTypeService>();
 builder.Services.AddScoped<IApprovalStatusService, ApprovalStatusService>();
 builder.Services.AddScoped<IApproverRoleService, ApproverRoleService>();
 builder.Services.AddScoped<IUserService, UserService>();
+builder.Services.AddScoped<IProjectProposalService, ProjectProposalService>();
+builder.Services.AddScoped<IApprovalRuleService, ApprovalRuleService>();
+builder.Services.AddScoped<IProjectApprovalStepService, ProjectApprovalStepService>(); 
+builder.Services.AddScoped<IProposalCreationService, ProposalCreationService>(); 
 
 var app = builder.Build();
 

@@ -3,7 +3,7 @@ using Domain.Entities;
 
 namespace Application.Services
 {
-    public class ProposalCreationService
+    public class ProposalCreationService : IProposalCreationService
     {
         private readonly IProjectProposalService _proposalService;
         private readonly IApprovalRuleService _approvalRuleService;
@@ -22,7 +22,6 @@ namespace Application.Services
         public async Task CreateProposalWithStepsAsync(ProjectProposal proposal)
         {
             proposal.Id = Guid.NewGuid();
-
             await _proposalService.CreateAsync(proposal);
 
             var allRules = await _approvalRuleService.GetAllAsync();
@@ -55,6 +54,27 @@ namespace Application.Services
 
                 await _stepService.CreateAsync(step);
             }
+        }
+
+        public async Task<ProjectProposal> CreateProposalFromDtoAsync(CreateProjectProposalDto dto)
+        {
+            var proposal = new ProjectProposal
+            {
+                Id = Guid.NewGuid(),
+                Title = dto.Title,
+                Description = dto.Description,
+                EstimatedAmount = dto.EstimatedAmount,
+                EstimatedDuration = dto.EstimatedDuration,
+                Area = dto.Area,
+                Type = dto.ProjectType,
+                CreateBy = dto.CreatedBy,
+                Status = 1, // pending
+            };
+
+            await CreateProposalWithStepsAsync(proposal);
+            var createdProposal = await _proposalService.GetByIdAsync(proposal.Id);
+
+            return createdProposal!;
         }
     }
 }

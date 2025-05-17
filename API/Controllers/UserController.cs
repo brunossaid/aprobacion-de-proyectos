@@ -1,37 +1,29 @@
 using Microsoft.AspNetCore.Mvc;
 using Application.Interfaces;
-using Domain.Entities;   
 using Application.DTOs;
+using AutoMapper;
 
 namespace WebApi.Controllers
 {
-    [Route("api/[controller]")]
     [ApiController]
+    [Route("api/[controller]")]
+    [Tags("Information")]
     public class UserController : ControllerBase
     {
         private readonly IUserService _userService;
+        private readonly IMapper _mapper;
 
-        public UserController(IUserService userService)
+        public UserController(IUserService userService, IMapper mapper)
         {
             _userService = userService;
+            _mapper = mapper;
         }
 
         [HttpGet]
         public async Task<ActionResult<IEnumerable<UserDto>>> GetUsers()
         {
             var users = await _userService.GetAllAsync();
-
-            var userDtos = users.Select(user => new UserDto
-            {
-                Id = user.Id,
-                Name = user.Name,
-                Email = user.Email,
-                Role = new ApproverRoleDto
-                {
-                    Id = user.Role,
-                    Name = user.RoleNavigation.Name
-                }
-            }).ToList();
+            var userDtos = _mapper.Map<IEnumerable<UserDto>>(users);
 
             return Ok(userDtos);
         }

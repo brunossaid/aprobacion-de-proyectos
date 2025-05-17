@@ -1,32 +1,31 @@
 using Microsoft.AspNetCore.Mvc;
 using Application.Interfaces;
-using Domain.Entities;   
 using Application.DTOs;
+using AutoMapper;
 
-
-namespace API.Controllers;
-
-[ApiController]
-[Route("api/[controller]")]
-public class ApproverRoleController : ControllerBase
+namespace API.Controllers
 {
-    private readonly IApproverRoleService _approverRoleService;
-
-    public ApproverRoleController(IApproverRoleService approverRoleService)
+    [ApiController]
+    [Route("api/Role")]
+    [Tags("Information")]
+    public class ApproverRoleController : ControllerBase
     {
-        _approverRoleService = approverRoleService;
-    }
+        private readonly IApproverRoleService _approverRoleService;
+        private readonly IMapper _mapper;
 
-    [HttpGet]
-    public async Task<ActionResult<IEnumerable<ApproverRoleDto>>> GetAll()
-    {
-        var roles = await _approverRoleService.GetAllAsync();
-        var rolesDtos = roles.Select(a => new ApproverRoleDto
-    {
-        Id = a.Id,
-        Name = a.Name
-    });
+        public ApproverRoleController(IApproverRoleService approverRoleService, IMapper mapper)
+        {
+            _approverRoleService = approverRoleService;
+            _mapper = mapper;
+        }
 
-    return Ok(rolesDtos);
+        [HttpGet]
+        public async Task<ActionResult<IEnumerable<ApproverRoleDto>>> GetAll()
+        {
+            var roles = await _approverRoleService.GetAllAsync();
+            var rolesDtos = _mapper.Map<IEnumerable<ApproverRoleDto>>(roles);
+
+            return Ok(rolesDtos);
+        }
     }
 }
