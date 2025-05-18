@@ -58,6 +58,15 @@ namespace Application.Services
 
         public async Task<ProjectProposal> CreateProposalFromDtoAsync(CreateProjectProposalDto dto)
         {
+            var allProposals = await _proposalService.GetAllAsync();
+            var existsWithSameTitle = allProposals
+                .Any(p => p.Title.Trim().ToLower() == dto.Title.Trim().ToLower());
+
+            if (existsWithSameTitle)
+            {
+                throw new InvalidOperationException("Ya existe un proyecto con el mismo titulo.");
+            }
+
             var proposal = new ProjectProposal
             {
                 Id = Guid.NewGuid(),

@@ -12,5 +12,6 @@ namespace Application.DTOs
         public ProjectTypeDto Type { get; set; } = null!;
         public ApprovalStatusDto Status { get; set; } = null!;
         public UserDto CreateBy { get; set; } = null!;
+        public List<ProjectApprovalStepDto> ApprovalSteps { get; set; } = new();
     }
 }
