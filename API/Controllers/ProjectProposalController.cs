@@ -2,7 +2,7 @@ using AutoMapper;
 using Application.DTOs;
 using Microsoft.AspNetCore.Mvc;
 using Application.Interfaces;
-
+using Application.Services; 
 namespace Infrastructure.Controllers
 {
     [ApiController]
@@ -12,15 +12,18 @@ namespace Infrastructure.Controllers
     {
         private readonly IProposalCreationService _proposalCreationService;
         private readonly IProjectProposalService _proposalService;
+        private readonly ProposalFilterService _proposalFilterService;
         private readonly IMapper _mapper;
 
         public ProjectProposalController(
             IProposalCreationService proposalCreationService,
             IProjectProposalService proposalService,
+            ProposalFilterService proposalFilterService,
             IMapper mapper)
         {
             _proposalCreationService = proposalCreationService;
             _proposalService = proposalService;
+            _proposalFilterService = proposalFilterService;
             _mapper = mapper;
         }
 
@@ -34,6 +37,7 @@ namespace Infrastructure.Controllers
             {
                 return BadRequest(new ErrorResponse { Message = "Datos del proyecto invalidos" });
             }
+
             try
             {
                 var proposal = await _proposalCreationService.CreateProposalFromDtoAsync(dto);
@@ -43,7 +47,7 @@ namespace Infrastructure.Controllers
             }
             catch (InvalidOperationException ex)
             {
-                return Conflict(new ErrorResponse { Message = ex.Message }); // <-- devuelve 409 con mensaje
+                return Conflict(new ErrorResponse { Message = ex.Message });
             }
         }
 
@@ -58,7 +62,6 @@ namespace Infrastructure.Controllers
                 return NotFound();
 
             var proposalDto = _mapper.Map<ProjectProposalDto>(proposal);
-
             return Ok(proposalDto);
         }
 
@@ -74,7 +77,7 @@ namespace Infrastructure.Controllers
 
             if (filters.CreatedBy.HasValue && filters.CreatedBy <= 0)
             {
-                return BadRequest(new ErrorResponse { Message = "El ID del usuario creador debe ser mayor a 0" });
+                return BadRequest(new ErrorResponse { Message = "El ID del creador debe ser mayor a 0" });
             }
 
             if (filters.ApproverUserId.HasValue && filters.ApproverUserId <= 0)
@@ -82,7 +85,7 @@ namespace Infrastructure.Controllers
                 return BadRequest(new ErrorResponse { Message = "El ID del aprobador debe ser mayor a 0" });
             }
 
-            var proposals = await _proposalService.GetFilteredAsync(filters);
+            var proposals = await _proposalFilterService.GetFilteredAsync(filters);
             var proposalDtos = _mapper.Map<List<ProjectProposalDto>>(proposals);
 
             return Ok(proposalDtos);

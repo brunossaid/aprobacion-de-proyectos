@@ -1,5 +1,4 @@
 using Domain.Entities;
-using Application.DTOs;
 
 namespace Application.Interfaces
 {
@@ -9,6 +8,5 @@ namespace Application.Interfaces
         Task<ProjectProposal?> GetByIdAsync(Guid id);
         Task CreateAsync(ProjectProposal proposal);
         Task UpdateAsync(ProjectProposal proposal);
-        Task<List<ProjectProposal>> GetFilteredAsync(ProjectProposalFilterDto filters);
     }
 }
