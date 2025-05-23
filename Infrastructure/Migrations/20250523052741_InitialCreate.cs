@@ -306,7 +306,7 @@ namespace Infrastructure.Migrations
                 columns: new[] { "Id", "ApproverRoleId", "ApproverRoleId1", "Area", "AreaId", "MaxAmount", "MinAmount", "ProjectTypeId", "StepOrder", "Type" },
                 values: new object[,]
                 {
-                    { 1L, 1, null, null, null, 10000m, 0m, null, 1, null },
+                    { 1L, 1, null, null, null, 100000m, 0m, null, 1, null },
                     { 2L, 2, null, null, null, 20000m, 5000m, null, 2, null },
                     { 3L, 2, null, 2, null, 20000m, 0m, null, 1, 2 },
                     { 4L, 3, null, null, null, 0m, 20000m, null, 3, null },

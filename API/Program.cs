@@ -16,6 +16,7 @@ builder.Services.AddControllers()
     });
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
+builder.Services.AddSwaggerGen(c =>{c.EnableAnnotations();});
 builder.Services.AddAutoMapper(typeof(MappingProfile));
 builder.Services.AddDbContext<AppDbContext>(options =>
     options.UseSqlServer(connectionString));
@@ -29,8 +30,11 @@ builder.Services.AddScoped<IProjectTypeService, ProjectTypeService>();
 builder.Services.AddScoped<IProjectProposalService, ProjectProposalService>();
 builder.Services.AddScoped<IApprovalRuleService, ApprovalRuleService>();
 builder.Services.AddScoped<IProjectApprovalStepService, ProjectApprovalStepService>();
-builder.Services.AddScoped<IProposalCreationService, ProposalCreationService>(); 
+builder.Services.AddScoped<IProposalCreationService, ProposalCreationService>();
 builder.Services.AddScoped<ProposalFilterService>();
+builder.Services.AddScoped<ApprovalStepManager>();
+builder.Services.AddScoped<UpdateProposalService>();
+
 
 var app = builder.Build();
 

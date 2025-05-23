@@ -78,7 +78,7 @@ namespace Infrastructure.Migrations
                         {
                             Id = 1L,
                             ApproverRoleId = 1,
-                            MaxAmount = 10000m,
+                            MaxAmount = 100000m,
                             MinAmount = 0m,
                             StepOrder = 1
                         },

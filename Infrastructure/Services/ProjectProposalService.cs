@@ -45,5 +45,17 @@ namespace Infrastructure.Services
             _context.ProjectProposal.Update(proposal);
             await _context.SaveChangesAsync();
         }
+
+        public async Task<bool> TitleExistsAsync(string title, Guid? excludeId = null)
+        {
+            var query = _context.ProjectProposal.AsQueryable();
+
+            query = query.Where(p => p.Title.ToLower() == title.ToLower());
+
+            if (excludeId.HasValue)
+                query = query.Where(p => p.Id != excludeId.Value);
+
+            return await query.AnyAsync();
+        }
     }
 }

@@ -12,7 +12,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Infrastructure.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    [Migration("20250424000349_InitialCreate")]
+    [Migration("20250523052741_InitialCreate")]
     partial class InitialCreate
     {
         /// <inheritdoc />
@@ -81,7 +81,7 @@ namespace Infrastructure.Migrations
                         {
                             Id = 1L,
                             ApproverRoleId = 1,
-                            MaxAmount = 10000m,
+                            MaxAmount = 100000m,
                             MinAmount = 0m,
                             StepOrder = 1
                         },

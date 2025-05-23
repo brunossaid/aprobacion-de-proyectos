@@ -2,6 +2,7 @@ using Microsoft.AspNetCore.Mvc;
 using Application.Interfaces;
 using Application.DTOs;
 using AutoMapper;
+using Swashbuckle.AspNetCore.Annotations;
 
 namespace API.Controllers
 {
@@ -20,6 +21,7 @@ namespace API.Controllers
         }
 
         [HttpGet]
+        [SwaggerOperation(Summary = "Listado de roles de usuario")]
         public async Task<ActionResult<IEnumerable<ApproverRoleDto>>> GetAll()
         {
             var roles = await _approverRoleService.GetAllAsync();

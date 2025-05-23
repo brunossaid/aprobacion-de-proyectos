@@ -2,7 +2,7 @@ using Microsoft.AspNetCore.Mvc;
 using Application.Interfaces;
 using Application.DTOs;
 using AutoMapper;
-using Domain.Entities;
+using Swashbuckle.AspNetCore.Annotations;
 
 namespace API.Controllers
 {
@@ -21,6 +21,7 @@ namespace API.Controllers
         }
 
         [HttpGet]
+        [SwaggerOperation(Summary = "Listado de estados para una solicitud de proyecto y pasos de aprobacion")]
         public async Task<ActionResult<IEnumerable<ApprovalStatusDto>>> GetAll()
         {
             var statuses = await _approvalStatusService.GetAllAsync();

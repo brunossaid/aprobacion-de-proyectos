@@ -24,6 +24,18 @@ namespace Infrastructure.Services
                 .ToListAsync();
         }
 
+        public async Task<List<ProjectApprovalStep>> GetStepsByProjectIdAsync(Guid projectId)
+        {
+            return await _context.ProjectApprovalStep
+                .Include(s => s.ProjectProposalNavigation)
+                .Include(s => s.ApproverRoleNavigation)
+                .Include(s => s.StatusNavigation)
+                .Include(s => s.ApproverUserNavigation)
+                .Where(s => s.ProjectProposalId == projectId)
+                .OrderBy(s => s.StepOrder)
+                .ToListAsync();
+        }
+
         public async Task<ProjectApprovalStep?> GetByIdAsync(long id)
         {
             return await _context.ProjectApprovalStep

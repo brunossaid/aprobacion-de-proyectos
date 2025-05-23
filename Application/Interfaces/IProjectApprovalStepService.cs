@@ -8,5 +8,6 @@ namespace Application.Interfaces
         Task<ProjectApprovalStep?> GetByIdAsync(long id);
         Task CreateAsync(ProjectApprovalStep step);
         Task UpdateAsync(ProjectApprovalStep step);
+        Task<List<ProjectApprovalStep>> GetStepsByProjectIdAsync(Guid projectId);
     }
 }

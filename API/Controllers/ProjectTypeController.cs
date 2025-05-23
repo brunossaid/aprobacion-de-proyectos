@@ -2,6 +2,7 @@ using Microsoft.AspNetCore.Mvc;
 using Application.Interfaces;
 using Application.DTOs;
 using AutoMapper;
+using Swashbuckle.AspNetCore.Annotations;
 
 namespace API.Controllers
 {
@@ -20,6 +21,7 @@ namespace API.Controllers
         }
 
         [HttpGet]
+        [SwaggerOperation(Summary = "Listado de tipos de proyecto")]
         public async Task<ActionResult<IEnumerable<ProjectTypeDto>>> GetAll()
         {
             var types = await _projectTypeService.GetAllAsync();

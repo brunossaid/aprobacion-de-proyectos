@@ -21,6 +21,13 @@ namespace Infrastructure.Services
                 .ToListAsync();
         }
 
+        public async Task<User?> GetByIdAsync(int id)
+        {
+            return await _context.User
+                .Include(u => u.RoleNavigation)
+                .FirstOrDefaultAsync(u => u.Id == id);
+        }
+
         public async Task<User> GetByIndexAsync(int index)
         {
             var users = await GetAllAsync();

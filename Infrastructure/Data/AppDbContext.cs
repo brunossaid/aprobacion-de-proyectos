@@ -16,12 +16,10 @@ namespace Infrastructure.Data
 
         public AppDbContext(DbContextOptions<AppDbContext> options) : base(options) { }
 
-        /*
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
             optionsBuilder.UseSqlServer(@"Server=localhost\SQLEXPRESS;Database=AprobacionProyectosDB;Trusted_Connection=True;TrustServerCertificate=True;");
         }
-        */
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
@@ -66,7 +64,7 @@ namespace Infrastructure.Data
             );
 
             modelBuilder.Entity<ApprovalRule>().HasData(
-                new ApprovalRule { Id = 1, MinAmount = 0, MaxAmount = 10000, Area = null, Type = null, StepOrder = 1, ApproverRoleId = 1 },
+                new ApprovalRule { Id = 1, MinAmount = 0, MaxAmount = 100000, Area = null, Type = null, StepOrder = 1, ApproverRoleId = 1 },
                 new ApprovalRule { Id = 2, MinAmount = 5000, MaxAmount = 20000, Area = null, Type = null, StepOrder = 2, ApproverRoleId = 2 },
                 new ApprovalRule { Id = 3, MinAmount = 0, MaxAmount = 20000, Area = 2, Type = 2, StepOrder = 1, ApproverRoleId = 2 },
                 new ApprovalRule { Id = 4, MinAmount = 20000, MaxAmount = 0, Area = null, Type = null, StepOrder = 3, ApproverRoleId = 3 },

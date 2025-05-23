@@ -58,9 +58,7 @@ namespace Application.Services
 
         public async Task<ProjectProposal> CreateProposalFromDtoAsync(CreateProjectProposalDto dto)
         {
-            var allProposals = await _proposalService.GetAllAsync();
-            var existsWithSameTitle = allProposals
-                .Any(p => p.Title.Trim().ToLower() == dto.Title.Trim().ToLower());
+            var existsWithSameTitle = await _proposalService.TitleExistsAsync(dto.Title);
 
             if (existsWithSameTitle)
             {

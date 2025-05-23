@@ -3,6 +3,7 @@ using Application.Interfaces;
 using Domain.Entities;   
 using Application.DTOs;
 using AutoMapper;
+using Swashbuckle.AspNetCore.Annotations;
 
 namespace API.Controllers;
 
@@ -21,7 +22,8 @@ public class AreaController : ControllerBase
     }
 
     [HttpGet]
-    public async Task<ActionResult<IEnumerable<AreaDto>>> GetAll()
+    [SwaggerOperation(Summary = "Listado de areas")]
+        public async Task<ActionResult<IEnumerable<AreaDto>>> GetAll()
     {
         var areas = await _areaService.GetAllAsync();
 

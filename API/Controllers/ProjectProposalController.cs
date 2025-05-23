@@ -2,7 +2,9 @@ using AutoMapper;
 using Application.DTOs;
 using Microsoft.AspNetCore.Mvc;
 using Application.Interfaces;
-using Application.Services; 
+using Application.Services;
+using Swashbuckle.AspNetCore.Annotations;
+
 namespace Infrastructure.Controllers
 {
     [ApiController]
@@ -13,17 +15,23 @@ namespace Infrastructure.Controllers
         private readonly IProposalCreationService _proposalCreationService;
         private readonly IProjectProposalService _proposalService;
         private readonly ProposalFilterService _proposalFilterService;
+        private readonly IProjectApprovalStepService _stepService;
+        private readonly UpdateProposalService _updateProposalService;
         private readonly IMapper _mapper;
 
         public ProjectProposalController(
             IProposalCreationService proposalCreationService,
             IProjectProposalService proposalService,
             ProposalFilterService proposalFilterService,
+            IProjectApprovalStepService stepService,
+            UpdateProposalService updateProposalService,
             IMapper mapper)
         {
             _proposalCreationService = proposalCreationService;
             _proposalService = proposalService;
             _proposalFilterService = proposalFilterService;
+            _stepService = stepService;
+            _updateProposalService = updateProposalService;
             _mapper = mapper;
         }
 
@@ -31,6 +39,7 @@ namespace Infrastructure.Controllers
         [ProducesResponseType(typeof(ProjectProposalDto), StatusCodes.Status201Created)]
         [ProducesResponseType(typeof(ErrorResponse), StatusCodes.Status400BadRequest)]
         [ProducesResponseType(typeof(ErrorResponse), StatusCodes.Status409Conflict)]
+        [SwaggerOperation(Summary = "Crear propuesta de proyecto")]
         public async Task<ActionResult<ProjectProposalDto>> CreateProposal([FromBody] CreateProjectProposalDto dto)
         {
             if (dto == null)
@@ -43,6 +52,9 @@ namespace Infrastructure.Controllers
                 var proposal = await _proposalCreationService.CreateProposalFromDtoAsync(dto);
                 var proposalDto = _mapper.Map<ProjectProposalDto>(proposal);
 
+                var steps = await _stepService.GetStepsByProjectIdAsync(proposal.Id);
+                proposalDto.ApprovalSteps = _mapper.Map<List<ProjectApprovalStepDto>>(steps);
+
                 return CreatedAtAction(nameof(GetProposalById), new { id = proposal.Id }, proposalDto);
             }
             catch (InvalidOperationException ex)
@@ -54,6 +66,7 @@ namespace Infrastructure.Controllers
         [HttpGet("{id}")]
         [ProducesResponseType(typeof(ProjectProposalDto), StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
+        [SwaggerOperation(Summary = "Buscar propuesta de proyecto por ID")]
         public async Task<ActionResult<ProjectProposalDto>> GetProposalById(Guid id)
         {
             var proposal = await _proposalService.GetByIdAsync(id);
@@ -61,13 +74,16 @@ namespace Infrastructure.Controllers
             if (proposal == null)
                 return NotFound();
 
+            var steps = await _stepService.GetStepsByProjectIdAsync(id);
             var proposalDto = _mapper.Map<ProjectProposalDto>(proposal);
+            proposalDto.ApprovalSteps = _mapper.Map<List<ProjectApprovalStepDto>>(steps);
             return Ok(proposalDto);
         }
 
         [HttpGet]
         [ProducesResponseType(typeof(List<ProjectProposalDto>), StatusCodes.Status200OK)]
         [ProducesResponseType(typeof(ErrorResponse), StatusCodes.Status400BadRequest)]
+        [SwaggerOperation(Summary = "Filtrar propuestas de proyecto")]
         public async Task<ActionResult<List<ProjectProposalDto>>> GetProposals([FromQuery] ProjectProposalFilterDto filters)
         {
             if (filters.Status.HasValue && (filters.Status < 1 || filters.Status > 4))
@@ -88,7 +104,45 @@ namespace Infrastructure.Controllers
             var proposals = await _proposalFilterService.GetFilteredAsync(filters);
             var proposalDtos = _mapper.Map<List<ProjectProposalDto>>(proposals);
 
+            foreach (var proposal in proposalDtos)
+            {
+                var steps = await _stepService.GetStepsByProjectIdAsync(proposal.Id);
+                proposal.ApprovalSteps = _mapper.Map<List<ProjectApprovalStepDto>>(steps);
+            }
+
             return Ok(proposalDtos);
+        }
+        
+        [HttpPut("{id}")]
+        [ProducesResponseType(typeof(ProjectProposalDto), StatusCodes.Status200OK)]
+        [ProducesResponseType(typeof(ErrorResponse), StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(typeof(ErrorResponse), StatusCodes.Status404NotFound)]
+        [ProducesResponseType(typeof(ErrorResponse), StatusCodes.Status409Conflict)]
+        [SwaggerOperation(Summary = "Actualizar propuesta de proyecto")]
+        public async Task<IActionResult> UpdateProposal(Guid id, [FromBody] UpdateProjectProposalDto dto)
+        {
+            try
+            {
+                var updatedProposal = await _updateProposalService.UpdateProposalAsync(id, dto);
+
+                var steps = await _stepService.GetStepsByProjectIdAsync(updatedProposal.Id);
+                var proposalDto = _mapper.Map<ProjectProposalDto>(updatedProposal);
+                proposalDto.ApprovalSteps = _mapper.Map<List<ProjectApprovalStepDto>>(steps);
+
+                return Ok(proposalDto);
+            }
+            catch (KeyNotFoundException ex)
+            {
+                return NotFound(new ErrorResponse { Message = ex.Message });
+            }
+            catch (InvalidOperationException ex)
+            {
+                return Conflict(new ErrorResponse { Message = ex.Message });
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(new ErrorResponse { Message = ex.Message });
+            }
         }
     }
 }
