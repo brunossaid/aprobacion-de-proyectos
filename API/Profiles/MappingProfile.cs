@@ -28,11 +28,7 @@ namespace API.Profiles
                 .ForMember(dest => dest.Id, opt => opt.MapFrom(src => src.Id))
                 .ForMember(dest => dest.Name, opt => opt.MapFrom(src => src.Name))
                 .ForMember(dest => dest.Email, opt => opt.MapFrom(src => src.Email))
-                .ForMember(dest => dest.Role, opt => opt.MapFrom(src => new ApproverRoleDto
-                {
-                    Id = src.Role,
-                    Name = src.RoleNavigation.Name
-                }));
+                .ForMember(dest => dest.Role, opt => opt.MapFrom(src => src.RoleNavigation));
 
             CreateMap<ProjectProposal, ProjectProposalDto>()
                 .ForMember(dest => dest.Area, opt => opt.MapFrom(src => src.AreaNavigation))
@@ -43,7 +39,7 @@ namespace API.Profiles
             CreateMap<CreateProjectProposalDto, ProjectProposal>()
                 .ForMember(dest => dest.Area, opt => opt.MapFrom(src => src.Area))
                 .ForMember(dest => dest.Type, opt => opt.MapFrom(src => src.ProjectType))
-                .ForMember(dest => dest.CreateBy, opt => opt.MapFrom(src => src.CreatedBy));
+                .ForMember(dest => dest.CreateBy, opt => opt.MapFrom(src => src.CreateBy));
 
             CreateMap<ProjectApprovalStep, ProjectApprovalStepDto>()
                 .ForMember(dest => dest.Id, opt => opt.MapFrom(src => src.Id))

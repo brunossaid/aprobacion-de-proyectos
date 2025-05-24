@@ -31,9 +31,9 @@ namespace Application.Services
                 query = query.Where(p => p.Status == filters.Status.Value);
             }
 
-            if (filters.CreatedBy.HasValue)
+            if (filters.CreateBy.HasValue)
             {
-                query = query.Where(p => p.CreateBy == filters.CreatedBy.Value);
+                query = query.Where(p => p.CreateBy == filters.CreateBy.Value);
             }
 
             if (filters.ApproverUserId.HasValue)

@@ -6,6 +6,6 @@ public class CreateProjectProposalDto
     public int EstimatedDuration { get; set; }
     public int Area { get; set; }
     public int ProjectType { get; set; }
-    public int CreatedBy { get; set; }
+    public int CreateBy { get; set; }
     
 }

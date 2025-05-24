@@ -91,7 +91,7 @@ namespace Infrastructure.Controllers
                 return BadRequest(new ErrorResponse { Message = "El estado ingresado no es valido" });
             }
 
-            if (filters.CreatedBy.HasValue && filters.CreatedBy <= 0)
+            if (filters.CreateBy.HasValue && filters.CreateBy <= 0)
             {
                 return BadRequest(new ErrorResponse { Message = "El ID del creador debe ser mayor a 0" });
             }

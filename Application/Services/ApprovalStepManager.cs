@@ -25,9 +25,9 @@ public class ApprovalStepManager
         if (project == null)
             throw new KeyNotFoundException("Proyecto no encontrado");
 
-        if (project.Status == 3)
-            throw new InvalidOperationException("El proyecto ya fue aprobado");
         if (project.Status == 2)
+            throw new InvalidOperationException("El proyecto ya fue aprobado");
+        if (project.Status == 3)
             throw new InvalidOperationException("El proyecto ya fue rechazado");
 
         var step = await _stepService.GetByIdAsync(dto.Id);
@@ -39,6 +39,13 @@ public class ApprovalStepManager
 
         if (step.Status != 1 && step.Status != 4)
             throw new InvalidOperationException("Este paso ya fue evaluado");
+
+        var steps = await _stepService.GetStepsByProjectIdAsync(projectId);
+        var priorStepsIncomplete = steps.Any(s =>
+            s.StepOrder < step.StepOrder &&
+            s.Status != 2); 
+        if (priorStepsIncomplete)
+            throw new InvalidOperationException("No se puede evaluar este paso hasta que se aprueben todos los pasos anteriores.");
 
         var user = await _userService.GetByIdAsync(dto.User);
         if (user == null)
@@ -59,13 +66,15 @@ public class ApprovalStepManager
             case 1:
                 throw new InvalidOperationException("No se puede asignar estado pendiente.");
             case 2:
-                var steps = await _stepService.GetStepsByProjectIdAsync(projectId);
-                if (steps.All(s => s.Status == 2))
+                var updatedSteps = await _stepService.GetStepsByProjectIdAsync(projectId);
+                if (updatedSteps.All(s => s.Status == 2))
                 {
                     project.Status = 2;
-                    await _proposalService.UpdateAsync(project);
                 }
-                project.Status = 1;
+                else
+                {
+                    project.Status = 1;
+                }
                 await _proposalService.UpdateAsync(project);
                 break;
             case 3:

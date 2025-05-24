@@ -74,7 +74,7 @@ namespace Application.Services
                 EstimatedDuration = dto.EstimatedDuration,
                 Area = dto.Area,
                 Type = dto.ProjectType,
-                CreateBy = dto.CreatedBy,
+                CreateBy = dto.CreateBy,
                 Status = 1, // pending
             };
 

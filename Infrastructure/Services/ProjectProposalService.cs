@@ -21,6 +21,7 @@ namespace Infrastructure.Services
                 .Include(p => p.TypeNavigation)
                 .Include(p => p.StatusNavigation)
                 .Include(p => p.CreateByNavigation)
+                    .ThenInclude(u => u.RoleNavigation)
                 .ToListAsync();
         }
 
@@ -31,6 +32,7 @@ namespace Infrastructure.Services
                 .Include(p => p.TypeNavigation)
                 .Include(p => p.StatusNavigation)
                 .Include(p => p.CreateByNavigation)
+                    .ThenInclude(u => u.RoleNavigation)
                 .FirstOrDefaultAsync(p => p.Id == id);
         }
 
