@@ -5,7 +5,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace Infrastructure.Services
 {
-    public class ProjectApprovalStepService : IProjectApprovalStepService
+    public class ProjectApprovalStepService : IProjectApprovalStepReader, IProjectApprovalStepWriter
     {
         private readonly AppDbContext _context;
 

@@ -6,18 +6,18 @@ namespace Application.Services
 {
     public class ProposalFilterService
     {
-        private readonly IProjectProposalService _proposalService;
-        private readonly IProjectApprovalStepService _stepService;
+        private readonly IProjectProposalReader _proposalReader;
+        private readonly IProjectApprovalStepReader _stepReader;
 
-        public ProposalFilterService(IProjectProposalService proposalService, IProjectApprovalStepService stepService)
+        public ProposalFilterService(IProjectProposalReader proposalReader, IProjectApprovalStepReader stepReader)
         {
-            _proposalService = proposalService;
-            _stepService = stepService;
+            _proposalReader = proposalReader;
+            _stepReader = stepReader;
         }
 
         public async Task<List<ProjectProposal>> GetFilteredAsync(ProjectProposalFilterDto filters)
         {
-            var proposals = await _proposalService.GetAllAsync();
+            var proposals = await _proposalReader.GetAllAsync();
             
             var query = proposals.AsQueryable();
 
@@ -38,7 +38,7 @@ namespace Application.Services
 
             if (filters.ApproverUserId.HasValue)
             {
-                var steps = await _stepService.GetAllAsync();
+                var steps = await _stepReader.GetAllAsync();
                 var filteredIds = steps
                     .Where(s => s.ApproverUserId == filters.ApproverUserId)
                     .Select(s => s.ProjectProposalId)

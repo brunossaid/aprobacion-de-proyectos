@@ -2,6 +2,7 @@ using Domain.Entities;
 using ConsoleApp.Core;
 using Microsoft.Extensions.DependencyInjection;
 using Application.Interfaces;
+using Application.Services;
 
 namespace ConsoleApp.Actions;
 
@@ -9,23 +10,11 @@ public static class ReviewProposals
 {
     public static async Task Execute(User currentUser, IServiceProvider services)
     {
-        var stepService = services.GetRequiredService<IProjectApprovalStepService>();
-        var proposalService = services.GetRequiredService<IProjectProposalService>();
+        var approvalManager = services.GetRequiredService<ApprovalStepManager>();
+        var proposalService = services.GetRequiredService<IProjectProposalReader>();
 
-        var steps = await stepService.GetAllAsync();
-        var proposals = await proposalService.GetAllAsync();
-
-        var pendingSteps = steps
-            .Where(step =>
-                step.ApproverRoleId == currentUser.Role &&          
-                step.Status != 2 && 
-                step.Status != 3 &&                                
-                steps                                              
-                    .Where(previousStep =>
-                        previousStep.ProjectProposalId == step.ProjectProposalId &&  
-                        previousStep.StepOrder < step.StepOrder)                     
-                    .All(previousStep => previousStep.Status == 2)) 
-            .ToList();
+        var pendingSteps = await approvalManager.GetPendingStepsForUserAsync(currentUser.Id);
+        var proposals = await proposalService.GetAllAsync(); 
 
         if (!pendingSteps.Any())
         {

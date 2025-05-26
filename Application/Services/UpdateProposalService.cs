@@ -6,16 +6,18 @@ namespace Application.Services
 {
     public class UpdateProposalService
     {
-        private readonly IProjectProposalService _proposalService;
+        private readonly IProjectProposalWriter _proposalWriter;
+        private readonly IProjectProposalReader _proposalReader;
 
-        public UpdateProposalService(IProjectProposalService proposalService)
+        public UpdateProposalService(IProjectProposalReader proposalReader, IProjectProposalWriter proposalWriter)
         {
-            _proposalService = proposalService;
+            _proposalWriter = proposalWriter;
+            _proposalReader = proposalReader;
         }
 
         public async Task<ProjectProposal> UpdateProposalAsync(Guid projectId, UpdateProjectProposalDto updateDto)
         {
-            var project = await _proposalService.GetByIdAsync(projectId);
+            var project = await _proposalReader.GetByIdAsync(projectId);
             if (project == null)
                 throw new KeyNotFoundException("Proyecto no encontrado");
 
@@ -25,9 +27,9 @@ namespace Application.Services
             if (!string.IsNullOrWhiteSpace(updateDto.Title))
             {
                 var newTitle = updateDto.Title.Trim();
-                bool titleExists = await _proposalService.TitleExistsAsync(newTitle, projectId);
+                bool titleExists = await _proposalReader.TitleExistsAsync(newTitle, projectId);
                 if (titleExists)
-                    throw new InvalidOperationException("Ya existe un proyecto con ese título.");
+                    throw new InvalidOperationException("Ya existe un proyecto con ese titulo.");
                 project.Title = newTitle;
             }
 
@@ -42,7 +44,7 @@ namespace Application.Services
                 project.EstimatedDuration = updateDto.EstimatedDuration.Value;
             }
 
-            await _proposalService.UpdateAsync(project);
+            await _proposalWriter.UpdateAsync(project);
             return project;
         }
     }

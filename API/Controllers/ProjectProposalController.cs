@@ -13,17 +13,17 @@ namespace Infrastructure.Controllers
     public class ProjectProposalController : ControllerBase
     {
         private readonly IProposalCreationService _proposalCreationService;
-        private readonly IProjectProposalService _proposalService;
+        private readonly IProjectProposalReader _proposalService;
         private readonly ProposalFilterService _proposalFilterService;
-        private readonly IProjectApprovalStepService _stepService;
+        private readonly IProjectApprovalStepReader _stepService;
         private readonly UpdateProposalService _updateProposalService;
         private readonly IMapper _mapper;
 
         public ProjectProposalController(
             IProposalCreationService proposalCreationService,
-            IProjectProposalService proposalService,
+            IProjectProposalReader proposalService,
             ProposalFilterService proposalFilterService,
-            IProjectApprovalStepService stepService,
+            IProjectApprovalStepReader stepService,
             UpdateProposalService updateProposalService,
             IMapper mapper)
         {
@@ -49,7 +49,7 @@ namespace Infrastructure.Controllers
 
             try
             {
-                var proposal = await _proposalCreationService.CreateProposalFromDtoAsync(dto);
+                var proposal = await _proposalCreationService.CreateProposalAsync(dto);
                 var proposalDto = _mapper.Map<ProjectProposalDto>(proposal);
 
                 var steps = await _stepService.GetStepsByProjectIdAsync(proposal.Id);

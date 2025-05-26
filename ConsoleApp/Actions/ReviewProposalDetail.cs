@@ -1,4 +1,5 @@
 using Application.Interfaces;
+using Application.Services;
 using ConsoleApp.Core;
 using Domain.Entities;
 using Microsoft.Extensions.DependencyInjection;
@@ -9,10 +10,10 @@ public static class ReviewProposalDetail
 {
     public static async Task Execute(User currentUser, IServiceProvider services, ProjectApprovalStep step)
     {
-        var proposalService = services.GetRequiredService<IProjectProposalService>();
-        var stepService = services.GetRequiredService<IProjectApprovalStepService>();
-        var proposal = await proposalService.GetByIdAsync(step.ProjectProposalId);
+        var proposalService = services.GetRequiredService<IProjectProposalReader>();
+        var approvalManager = services.GetRequiredService<ApprovalStepManager>();
 
+        var proposal = await proposalService.GetByIdAsync(step.ProjectProposalId);
         if (proposal == null)
         {
             Console.ForegroundColor = ConsoleColor.Red;
@@ -46,49 +47,38 @@ public static class ReviewProposalDetail
         while (true)
         {
             Console.ForegroundColor = ConsoleColor.DarkBlue;
-            Console.Write("Opcion: ");
-            Console.Write("");
+            Console.Write("Opción: ");
             Console.ResetColor();
 
             if (int.TryParse(Console.ReadLine(), out status) && status >= 1 && status <= 4)
                 break;
 
             Console.ForegroundColor = ConsoleColor.Red;
-            Console.WriteLine("Seleccion invalida. Intente nuevamente.");
+            Console.WriteLine("Selección invalida. Intente nuevamente.");
             Console.ResetColor();
         }
 
         string? observations = null;
+        if (status != 1)
+        {
+            Console.ForegroundColor = ConsoleColor.DarkCyan;
+            Console.Write("Observacion (opcional): ");
+            Console.ResetColor();
+            observations = Console.ReadLine();
+        }
+
         switch (status)
         {
             case 1:
-                Console.ForegroundColor = ConsoleColor.DarkYellow;
-                Console.WriteLine("La solicitud sigue pendiente.");
+                // excepcion
                 break;
             case 2:
                 Console.ForegroundColor = ConsoleColor.Green;
-                Console.WriteLine("Solicitud Aprobada.");
-                
-                var allSteps = await stepService.GetAllAsync();
-                var relatedSteps = allSteps.Where(s => s.ProjectProposalId == step.ProjectProposalId).ToList();
-
-                bool allApproved = relatedSteps.All(s => s.Id == step.Id || s.Status == 2);
-                if (allApproved)
-                {
-                    proposal.Status = 2; 
-                    await proposalService.UpdateAsync(proposal);
-                }
-
+                Console.WriteLine("Solicitud aprobada.");
                 break;
             case 3:
                 Console.ForegroundColor = ConsoleColor.Red;
                 Console.WriteLine("Solicitud rechazada.");
-
-                if (proposal != null)
-                {
-                    proposal.Status = 3;
-                    await proposalService.UpdateAsync(proposal);
-                }
                 break;
             case 4:
                 Console.ForegroundColor = ConsoleColor.Blue;
@@ -96,26 +86,32 @@ public static class ReviewProposalDetail
                 break;
         }
 
+        
 
-        if (status != 1)
+        try
         {
-            Console.ForegroundColor = ConsoleColor.DarkBlue;
-            Console.Write("Observacion (opcional): ");
-            Console.ResetColor();
-            observations = Console.ReadLine();
+            var dto = new DecisionDto
+            {
+                Id = step.Id,
+                Status = status,
+                Observation = observations,
+                User = currentUser.Id
+            };
+
+            await approvalManager.DecideNextStepAsync(step.ProjectProposalId, dto);
+
+            Console.ForegroundColor = ConsoleColor.Green;
+            Console.WriteLine("\nSolicitud revisada exitosamente.");
+        }
+        catch (Exception ex)
+        {
+            Console.ForegroundColor = ConsoleColor.Red;
+            Console.WriteLine($"{ex.Message}");
         }
 
-        step.Status = status;
-        step.Observations = observations;
-        step.DecisionDate = DateTime.Now;
-        step.ApproverUserId = currentUser.Id;
-
-        await stepService.UpdateAsync(step);
-
-        Console.ForegroundColor = ConsoleColor.Green;
-        Console.WriteLine("\nSolicitud revisada exitosamente.");
         Console.ForegroundColor = ConsoleColor.DarkGray;
         Console.WriteLine("Presione cualquier tecla para continuar...");
+        Console.ResetColor();
         Console.ReadKey();
         Console.Clear();
     }

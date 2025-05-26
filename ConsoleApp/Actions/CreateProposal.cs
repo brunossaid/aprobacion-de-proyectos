@@ -1,9 +1,7 @@
 using Application.Interfaces;
-using Application.Services;
 using ConsoleApp.Core;
 using Domain.Entities;
 using Microsoft.Extensions.DependencyInjection;
-
 
 namespace ConsoleApp.Actions;
 
@@ -11,7 +9,7 @@ public static class CreateProposal
 {
     public static async Task Execute(User currentUser, IServiceProvider services)
     {
-        var proposalService = services.GetRequiredService<IProjectProposalService>();
+        var proposalService = services.GetRequiredService<IProposalCreationService>();
         var areaService = services.GetRequiredService<IAreaService>();
         var typeService = services.GetRequiredService<IProjectTypeService>();
 
@@ -26,6 +24,51 @@ public static class CreateProposal
         Console.WriteLine("Crear nueva solicitud de proyecto\n");
         Console.ResetColor();
 
+        var dto = GetProposalData(currentUser, areas, types);
+
+        bool confirmed = ConfirmProposal(dto, areas, types);
+
+        if (!confirmed)
+        {
+            Console.ForegroundColor = ConsoleColor.Red;
+            Console.WriteLine("\nCreacion de solicitud cancelada.");
+            Console.ResetColor();
+        }
+        else
+        {
+            try
+            {
+                await proposalService.CreateProposalAsync(dto);
+
+                Console.ForegroundColor = ConsoleColor.Green;
+                Console.WriteLine("\nSolicitud de proyecto creada con exito.");
+                Console.ResetColor();
+            }
+            catch (Exception ex)
+            {
+                Console.ForegroundColor = ConsoleColor.Red;
+                Console.WriteLine("Error al guardar la solicitud:");
+                Console.ForegroundColor = ConsoleColor.DarkRed;
+                Console.WriteLine(ex.Message);
+
+                if (ex.InnerException != null)
+                {
+                    Console.ForegroundColor = ConsoleColor.DarkYellow;
+                    Console.WriteLine($"Detalles internos: {ex.InnerException.Message}");
+                }
+
+                Console.ResetColor();
+            }
+        }
+
+        Console.ForegroundColor = ConsoleColor.DarkGray;
+        Console.WriteLine("Presione cualquier tecla para continuar...");
+        Console.ResetColor();
+        Console.ReadKey();
+    }
+
+    private static CreateProjectProposalDto GetProposalData(User currentUser, List<Area> areas, List<ProjectType> types)
+    {
         // titulo
         Console.ForegroundColor = ConsoleColor.DarkBlue;
         Console.Write("Titulo: ");
@@ -51,7 +94,7 @@ public static class CreateProposal
             Console.ResetColor();
             description = Console.ReadLine()!;
         }
-        Console.WriteLine("");
+        Console.WriteLine();
 
         // area
         Console.ForegroundColor = ConsoleColor.DarkBlue;
@@ -81,7 +124,7 @@ public static class CreateProposal
         }
         Console.WriteLine();
 
-        // type
+        // tipo
         Console.ForegroundColor = ConsoleColor.DarkBlue;
         Console.WriteLine("Tipo de proyecto:");
         Console.ResetColor();
@@ -99,7 +142,7 @@ public static class CreateProposal
             if (int.TryParse(Console.ReadLine(), out int input) &&
                 input >= 1 && input <= types.Count)
             {
-                selectedType = types[input - 1]; 
+                selectedType = types[input - 1];
                 break;
             }
 
@@ -155,7 +198,20 @@ public static class CreateProposal
             else break;
         }
 
-        // confirmacion
+        return new CreateProjectProposalDto
+            {
+                Title = title,
+                Description = description,
+                Area = selectedArea.Id,
+                ProjectType = selectedType.Id,
+                EstimatedAmount = estimatedAmount,
+                EstimatedDuration = estimatedDuration,
+                CreateBy = currentUser.Id,
+            };
+    }
+
+    private static bool ConfirmProposal(CreateProjectProposalDto dto, List<Area> areas, List<ProjectType> types)
+    {
         Console.Clear();
         UI.ShowTitle();
 
@@ -163,12 +219,12 @@ public static class CreateProposal
         Console.WriteLine("Estas a punto de crear la siguiente solicitud de proyecto:\n");
         Console.ResetColor();
 
-        Console.WriteLine($"Titulo: {title}");
-        Console.WriteLine($"Descripcion: {description}");
-        Console.WriteLine($"Area: {selectedArea.Name}");
-        Console.WriteLine($"Tipo: {selectedType.Name}");
-        Console.WriteLine($"Monto estimado: ${estimatedAmount}");
-        Console.WriteLine($"Tiempo estimado: {estimatedDuration} meses");
+        Console.WriteLine($"Titulo: {dto.Title}");
+        Console.WriteLine($"Descripcion: {dto.Description}");
+        Console.WriteLine($"Area: {areas.First(a => a.Id == dto.Area).Name}");
+        Console.WriteLine($"Tipo: {types.First(t => t.Id == dto.ProjectType).Name}");
+        Console.WriteLine($"Monto estimado: ${dto.EstimatedAmount}");
+        Console.WriteLine($"Tiempo estimado: {dto.EstimatedDuration} meses");
 
         string? confirmation = null;
         while (confirmation != "s" && confirmation != "n")
@@ -187,57 +243,6 @@ public static class CreateProposal
             }
         }
 
-        if (confirmation == "s")
-        {
-            var proposalCreationService = services.GetRequiredService<ProposalCreationService>();
-
-            var proposal = new ProjectProposal
-            {
-                Title = title,
-                Description = description,
-                Area = selectedArea.Id,
-                Type = selectedType.Id,
-                EstimatedAmount = estimatedAmount,
-                EstimatedDuration = estimatedDuration,
-                CreateBy = currentUser.Id,
-                Status = 1 // pending
-            };
-
-            try
-            {
-                await proposalCreationService.CreateProposalWithStepsAsync(proposal);
-
-                Console.ForegroundColor = ConsoleColor.Green;
-                Console.WriteLine("\nSolicitud de proyecto creada con exito.");
-                Console.ResetColor();
-            }
-            catch (Exception ex)
-            {
-                Console.ForegroundColor = ConsoleColor.Red;
-                Console.WriteLine("Error al guardar la solicitud:");
-                Console.ForegroundColor = ConsoleColor.DarkRed;
-                Console.WriteLine(ex.Message);
-
-                if (ex.InnerException != null)
-                {
-                    Console.ForegroundColor = ConsoleColor.DarkYellow;
-                    Console.WriteLine($"Detalles internos: {ex.InnerException.Message}");
-                }
-
-                Console.ResetColor();
-            }
-        }
-        else 
-        {
-            Console.ForegroundColor = ConsoleColor.Red;
-            Console.WriteLine("\nCreacion de solicitud cancelada.");
-            Console.ResetColor();
-        }
-
-        Console.ForegroundColor = ConsoleColor.DarkGray;
-        Console.WriteLine("Presione cualquier tecla para continuar...");
-        Console.ResetColor();
-        Console.ReadKey();
-
+        return confirmation == "s";
     }
 }

@@ -5,23 +5,29 @@ namespace Application.Services;
 
 public class ApprovalStepManager
 {
-    private readonly IProjectProposalService _proposalService;
-    private readonly IProjectApprovalStepService _stepService;
+    private readonly IProjectProposalReader _proposalReader;
+    private readonly IProjectProposalWriter _proposalWriter;
+    private readonly IProjectApprovalStepReader _stepReader;
+    private readonly IProjectApprovalStepWriter _stepWriter;
     private readonly IUserService _userService;
 
     public ApprovalStepManager(
-        IProjectProposalService proposalService,
-        IProjectApprovalStepService stepService,
+        IProjectProposalReader proposalReader,
+        IProjectProposalWriter proposalWriter,
+        IProjectApprovalStepReader stepReader,
+        IProjectApprovalStepWriter stepWriter,
         IUserService userService)
     {
-        _proposalService = proposalService;
-        _stepService = stepService;
+        _proposalReader = proposalReader;
+        _proposalWriter = proposalWriter;
+        _stepReader = stepReader;
+        _stepWriter = stepWriter;
         _userService = userService;
     }
 
     public async Task<ProjectProposal> DecideNextStepAsync(Guid projectId, DecisionDto dto)
     {
-        var project = await _proposalService.GetByIdAsync(projectId);
+        var project = await _proposalReader.GetByIdAsync(projectId);
         if (project == null)
             throw new KeyNotFoundException("Proyecto no encontrado");
 
@@ -30,7 +36,7 @@ public class ApprovalStepManager
         if (project.Status == 3)
             throw new InvalidOperationException("El proyecto ya fue rechazado");
 
-        var step = await _stepService.GetByIdAsync(dto.Id);
+        var step = await _stepReader.GetByIdAsync(dto.Id);
         if (step == null)
             throw new KeyNotFoundException("Paso de aprobacion no encontrado");
 
@@ -40,10 +46,10 @@ public class ApprovalStepManager
         if (step.Status != 1 && step.Status != 4)
             throw new InvalidOperationException("Este paso ya fue evaluado");
 
-        var steps = await _stepService.GetStepsByProjectIdAsync(projectId);
+        var steps = await _stepReader.GetStepsByProjectIdAsync(projectId);
         var priorStepsIncomplete = steps.Any(s =>
             s.StepOrder < step.StepOrder &&
-            s.Status != 2); 
+            s.Status != 2);
         if (priorStepsIncomplete)
             throw new InvalidOperationException("No se puede evaluar este paso hasta que se aprueben todos los pasos anteriores.");
 
@@ -51,22 +57,22 @@ public class ApprovalStepManager
         if (user == null)
             throw new KeyNotFoundException("Usuario no encontrado");
 
-        if (user.Role != step.StepOrder)
+        if (user.Role != step.ApproverRoleId)
             throw new InvalidOperationException("El usuario no tiene permisos para aprobar este paso");
 
         step.Status = dto.Status;
         step.Observations = dto.Observation;
         step.DecisionDate = DateTime.UtcNow;
         step.ApproverUserId = dto.User;
-        await _stepService.UpdateAsync(step);
+        await _stepWriter.UpdateAsync(step);
 
-        // modificar status del proyecto si corresponde
+        // modificar estado del proyecto si corresponde
         switch (dto.Status)
         {
             case 1:
                 throw new InvalidOperationException("No se puede asignar estado pendiente.");
             case 2:
-                var updatedSteps = await _stepService.GetStepsByProjectIdAsync(projectId);
+                var updatedSteps = await _stepReader.GetStepsByProjectIdAsync(projectId);
                 if (updatedSteps.All(s => s.Status == 2))
                 {
                     project.Status = 2;
@@ -75,20 +81,48 @@ public class ApprovalStepManager
                 {
                     project.Status = 1;
                 }
-                await _proposalService.UpdateAsync(project);
+                await _proposalWriter.UpdateAsync(project);
                 break;
             case 3:
                 project.Status = 3;
-                await _proposalService.UpdateAsync(project);
+                await _proposalWriter.UpdateAsync(project);
                 break;
             case 4:
                 project.Status = 4;
-                await _proposalService.UpdateAsync(project);
+                await _proposalWriter.UpdateAsync(project);
                 break;
             default:
                 throw new InvalidOperationException("Estado invalido.");
-        }        
+        }
 
         return project;
+    }
+
+    public async Task<List<ProjectApprovalStep>> GetPendingStepsForUserAsync(int userId)
+    {
+        var user = await _userService.GetByIdAsync(userId);
+        if (user == null)
+            throw new KeyNotFoundException("Usuario no encontrado");
+
+        var allSteps = await _stepReader.GetAllAsync();
+
+        var pendingSteps = allSteps
+            .Where(step =>
+                step.ApproverRoleId == user.Role &&
+                (step.Status == 1 || step.Status == 4) &&
+                allSteps
+                    .Where(prev =>
+                        prev.ProjectProposalId == step.ProjectProposalId &&
+                        prev.StepOrder < step.StepOrder)
+                    .All(prev => prev.Status == 2))
+            .ToList();
+
+        return pendingSteps;
+    }
+
+    public async Task<List<ProjectApprovalStep>> GetStepsForProposalAsync(Guid proposalId)
+    {
+        var steps = await _stepReader.GetStepsByProjectIdAsync(proposalId);
+        return steps.OrderBy(s => s.StepOrder).ToList();
     }
 }

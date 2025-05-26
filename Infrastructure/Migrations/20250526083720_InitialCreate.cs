@@ -312,10 +312,10 @@ namespace Infrastructure.Migrations
                     { 4L, 3, null, null, null, 0m, 20000m, null, 3, null },
                     { 5L, 2, null, 1, null, 0m, 5000m, null, 2, 1 },
                     { 6L, 1, null, null, null, 10000m, 0m, null, 1, 2 },
-                    { 7L, 4, null, 2, null, 10000m, 0m, null, 1, 2 },
+                    { 7L, 4, null, 2, null, 10000m, 0m, null, 1, 1 },
                     { 8L, 2, null, 2, null, 30000m, 10000m, null, 2, null },
                     { 9L, 3, null, 3, null, 0m, 30000m, null, 2, null },
-                    { 10L, 1, null, null, null, 50000m, 0m, null, 1, 4 }
+                    { 10L, 4, null, null, null, 50000m, 0m, null, 1, 4 }
                 });
 
             migrationBuilder.InsertData(

@@ -1,8 +1,8 @@
 using Domain.Entities;
 using ConsoleApp.Core;
-using Application.Interfaces;
 using Microsoft.Extensions.DependencyInjection;
-using System.Threading.Tasks;
+using Application.Services;
+using Application.DTOs;
 
 namespace ConsoleApp.Actions;
 
@@ -19,9 +19,9 @@ public static class ViewProposals
             Console.WriteLine("\nMis solicitudes de proyecto");
             Console.ResetColor();
 
-            var proposalService = services.GetRequiredService<IProjectProposalService>();
-            var proposals = await proposalService.GetAllAsync();
-            var userProposals = proposals.Where(p => p.CreateBy == currentUser.Id).ToList();
+            var filterService = services.GetRequiredService<ProposalFilterService>();
+            var filters = new ProjectProposalFilterDto { CreateBy = currentUser.Id };
+            var userProposals = await filterService.GetFilteredAsync(filters);
 
             if(userProposals.Count == 0)
             {

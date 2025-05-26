@@ -1,9 +1,7 @@
-using System.Threading.Tasks;
 using ConsoleApp.Actions;
 using Domain.Entities;
-using Application.Interfaces; 
+using Application.Interfaces;
 using Microsoft.Extensions.DependencyInjection; 
-using System.Linq; 
 
 namespace ConsoleApp.Core;
 
@@ -11,7 +9,7 @@ public static class MainMenu
 {
     public static async Task Execute(User currentUser, IServiceProvider services)
     {
-        var stepService = services.GetRequiredService<IProjectApprovalStepService>();
+        var stepService = services.GetRequiredService<IProjectApprovalStepReader>();
         while (true)
         {
             var steps = await stepService.GetAllAsync();

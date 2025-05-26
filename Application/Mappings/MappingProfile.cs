@@ -2,7 +2,7 @@ using Application.DTOs;
 using Domain.Entities;
 using AutoMapper;
 
-namespace API.Profiles
+namespace Application.Mappings
 {
     public class MappingProfile : Profile
     {

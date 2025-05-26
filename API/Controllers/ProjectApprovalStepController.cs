@@ -15,9 +15,9 @@ namespace Infrastructure.Controllers
     {
         private readonly ApprovalStepManager _approvalStepManager;
         private readonly IMapper _mapper;
-        private readonly IProjectApprovalStepService _stepService; 
+        private readonly IProjectApprovalStepReader _stepService; 
 
-        public ProjectApprovalStepController(ApprovalStepManager approvalStepManager, IProjectApprovalStepService stepService,  IMapper mapper)
+        public ProjectApprovalStepController(ApprovalStepManager approvalStepManager, IProjectApprovalStepReader stepService,  IMapper mapper)
         {
             _approvalStepManager = approvalStepManager;
             _stepService = stepService;

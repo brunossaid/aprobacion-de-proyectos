@@ -5,7 +5,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace Infrastructure.Services
 {
-    public class ProjectProposalService : IProjectProposalService
+    public class ProjectProposalService : IProjectProposalReader, IProjectProposalWriter
     {
         private readonly AppDbContext _context;
 

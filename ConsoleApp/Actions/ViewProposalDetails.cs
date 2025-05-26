@@ -1,7 +1,7 @@
 using Domain.Entities;
 using ConsoleApp.Core;
-using Application.Interfaces;
 using Microsoft.Extensions.DependencyInjection;
+using Application.Services;
 
 namespace ConsoleApp.Actions;
 
@@ -9,12 +9,8 @@ public static class ViewProposalDetail
 {
     public static async Task Execute(ProjectProposal proposal, IServiceProvider services, User currentUser)
     {
-        var stepService = services.GetRequiredService<IProjectApprovalStepService>();
-        var steps = await stepService.GetAllAsync();
-        var proposalSteps = steps
-            .Where(s => s.ProjectProposalId == proposal.Id)
-            .OrderBy(s => s.StepOrder)
-            .ToList();
+        var approvalManager = services.GetRequiredService<ApprovalStepManager>();
+        var proposalSteps = await approvalManager.GetStepsForProposalAsync(proposal.Id);
 
 
         UI.ShowTitle();

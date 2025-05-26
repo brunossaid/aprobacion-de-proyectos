@@ -5,60 +5,26 @@ namespace Application.Services
 {
     public class ProposalCreationService : IProposalCreationService
     {
-        private readonly IProjectProposalService _proposalService;
+        private readonly IProjectProposalWriter _proposalWriter;
+        private readonly IProjectProposalReader _proposalReader;
         private readonly IApprovalRuleService _approvalRuleService;
-        private readonly IProjectApprovalStepService _stepService;
+        private readonly IProjectApprovalStepWriter _stepWriter;
 
         public ProposalCreationService(
-            IProjectProposalService proposalService,
+            IProjectProposalWriter proposalWriter,
+            IProjectProposalReader proposalReader,
             IApprovalRuleService approvalRuleService,
-            IProjectApprovalStepService stepService)
+            IProjectApprovalStepWriter stepWriter)
         {
-            _proposalService = proposalService;
+            _proposalWriter = proposalWriter;
+            _proposalReader = proposalReader;
             _approvalRuleService = approvalRuleService;
-            _stepService = stepService;
+            _stepWriter = stepWriter;
         }
 
-        public async Task CreateProposalWithStepsAsync(ProjectProposal proposal)
+        public async Task<ProjectProposal> CreateProposalAsync(CreateProjectProposalDto dto)
         {
-            proposal.Id = Guid.NewGuid();
-            await _proposalService.CreateAsync(proposal);
-
-            var allRules = await _approvalRuleService.GetAllAsync();
-            var applicableRules = allRules
-                .Where(r =>
-                    proposal.EstimatedAmount >= r.MinAmount &&
-                    (r.MaxAmount == 0 || proposal.EstimatedAmount <= r.MaxAmount))
-                .ToList();
-
-            var selectedRules = applicableRules
-                .GroupBy(r => r.StepOrder)
-                .Select(group => group
-                    .OrderByDescending(r => r.Area.HasValue && r.Area == proposal.Area)
-                    .ThenByDescending(r => r.Type.HasValue && r.Type == proposal.Type)
-                    .First())
-                .ToList();
-
-            foreach (var rule in selectedRules)
-            {
-                var step = new ProjectApprovalStep
-                {
-                    ProjectProposalId = proposal.Id,
-                    ApproverRoleId = rule.ApproverRoleId,
-                    Status = 1, // pending
-                    StepOrder = rule.StepOrder,
-                    ApproverUserId = null,
-                    DecisionDate = null,
-                    Observations = null
-                };
-
-                await _stepService.CreateAsync(step);
-            }
-        }
-
-        public async Task<ProjectProposal> CreateProposalFromDtoAsync(CreateProjectProposalDto dto)
-        {
-            var existsWithSameTitle = await _proposalService.TitleExistsAsync(dto.Title);
+            var existsWithSameTitle = await _proposalReader.TitleExistsAsync(dto.Title);
 
             if (existsWithSameTitle)
             {
@@ -75,12 +41,57 @@ namespace Application.Services
                 Area = dto.Area,
                 Type = dto.ProjectType,
                 CreateBy = dto.CreateBy,
-                Status = 1, // pending
+                Status = 1,
             };
 
-            await CreateProposalWithStepsAsync(proposal);
-            var createdProposal = await _proposalService.GetByIdAsync(proposal.Id);
+            await _proposalWriter.CreateAsync(proposal);
 
+            var allRules = await _approvalRuleService.GetAllAsync();
+
+            var applicableRules = allRules
+                .Where(r =>
+                    proposal.EstimatedAmount >= r.MinAmount &&
+                    (r.MaxAmount == 0 || proposal.EstimatedAmount <= r.MaxAmount))
+                .ToList();
+
+            var selectedRules = applicableRules
+                .GroupBy(r => r.StepOrder)
+                .Select(group =>
+                {
+                    // coinciden area y tipe
+                    var matchBoth = group.FirstOrDefault(r =>
+                        r.Area.HasValue && r.Area == proposal.Area &&
+                        r.Type.HasValue && r.Type == proposal.Type);
+
+                    if (matchBoth != null) return matchBoth;
+
+                    // coinciden area o tipo
+                    var matchOne = group.FirstOrDefault(r =>
+                        (r.Area.HasValue && r.Area == proposal.Area) ||
+                        (r.Type.HasValue && r.Type == proposal.Type));
+
+                    // no coincide ninguno
+                    return matchOne ?? group.First();
+                })
+                .ToList();
+
+            foreach (var rule in selectedRules)
+            {
+                var step = new ProjectApprovalStep
+                {
+                    ProjectProposalId = proposal.Id,
+                    ApproverRoleId = rule.ApproverRoleId,
+                    Status = 1,
+                    StepOrder = rule.StepOrder,
+                    ApproverUserId = null,
+                    DecisionDate = null,
+                    Observations = null
+                };
+
+                await _stepWriter.CreateAsync(step);
+            }
+
+            var createdProposal = await _proposalReader.GetByIdAsync(proposal.Id);
             return createdProposal!;
         }
     }
