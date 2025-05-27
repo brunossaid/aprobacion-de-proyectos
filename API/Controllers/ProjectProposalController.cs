@@ -65,14 +65,14 @@ namespace Infrastructure.Controllers
 
         [HttpGet("{id}")]
         [ProducesResponseType(typeof(ProjectProposalDto), StatusCodes.Status200OK)]
-        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        [ProducesResponseType(typeof(ErrorResponse), StatusCodes.Status404NotFound)]
         [SwaggerOperation(Summary = "Buscar propuesta de proyecto por ID")]
         public async Task<ActionResult<ProjectProposalDto>> GetProposalById(Guid id)
         {
             var proposal = await _proposalService.GetByIdAsync(id);
 
             if (proposal == null)
-                return NotFound();
+                return NotFound(new ErrorResponse { Message = "No se encontro la propuesta solicitada" });
 
             var steps = await _stepService.GetStepsByProjectIdAsync(id);
             var proposalDto = _mapper.Map<ProjectProposalDto>(proposal);
@@ -81,10 +81,10 @@ namespace Infrastructure.Controllers
         }
 
         [HttpGet]
-        [ProducesResponseType(typeof(List<ProjectProposalDto>), StatusCodes.Status200OK)]
+        [ProducesResponseType(typeof(List<ProjectProposalListDto>), StatusCodes.Status200OK)]
         [ProducesResponseType(typeof(ErrorResponse), StatusCodes.Status400BadRequest)]
         [SwaggerOperation(Summary = "Filtrar propuestas de proyecto")]
-        public async Task<ActionResult<List<ProjectProposalDto>>> GetProposals([FromQuery] ProjectProposalFilterDto filters)
+        public async Task<ActionResult<List<ProjectProposalListDto>>> GetProposals([FromQuery] ProjectProposalFilterDto filters)
         {
             if (filters.Status.HasValue && (filters.Status < 1 || filters.Status > 4))
             {
@@ -102,13 +102,7 @@ namespace Infrastructure.Controllers
             }
 
             var proposals = await _proposalFilterService.GetFilteredAsync(filters);
-            var proposalDtos = _mapper.Map<List<ProjectProposalDto>>(proposals);
-
-            foreach (var proposal in proposalDtos)
-            {
-                var steps = await _stepService.GetStepsByProjectIdAsync(proposal.Id);
-                proposal.ApprovalSteps = _mapper.Map<List<ProjectApprovalStepDto>>(steps);
-            }
+            var proposalDtos = _mapper.Map<List<ProjectProposalListDto>>(proposals);
 
             return Ok(proposalDtos);
         }

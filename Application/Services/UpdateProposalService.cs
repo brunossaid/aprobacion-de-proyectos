@@ -36,12 +36,12 @@ namespace Application.Services
             if (!string.IsNullOrWhiteSpace(updateDto.Description))
                 project.Description = updateDto.Description.Trim();
 
-            if (updateDto.EstimatedDuration.HasValue)
+            if (updateDto.Duration.HasValue)
             {
-                if (updateDto.EstimatedDuration.Value <= 0)
+                if (updateDto.Duration.Value <= 0)
                     throw new InvalidOperationException("La duracion estimada debe ser mayor a cero.");
 
-                project.EstimatedDuration = updateDto.EstimatedDuration.Value;
+                project.EstimatedDuration = updateDto.Duration.Value;
             }
 
             await _proposalWriter.UpdateAsync(project);
