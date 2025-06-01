@@ -1,0 +1,168 @@
+<section class="flex flex-col p-10 gap-2">
+  <h1 class="text-4xl font-semibold mb-3">Crear Solicitud de Proyecto</h1>
+  <div class="flex flex-col lg:flex-row lg:items-start gap-4">
+    <form
+      id="create-proposal-form"
+      class="bg-stone-200 dark:bg-stone-900 rounded-lg p-4 flex flex-col w-full"
+    >
+      <h1 class="text-2xl mb-2">Crear Solicitud</h1>
+      <label class="block text-lg">Nombre</label>
+      <input
+        id="name"
+        name="name"
+        autocomplete="off"
+        required
+        class="w-full text-lg px-3 py-2 rounded-md bg-white dark:bg-stone-950 border border-transparent hover:border-neutral-400 focus:border-teal-800 focus:outline-none transition-colors duration-300"
+      />
+      <label class="block text-lg mt-2">Descripcion</label>
+      <textarea
+        id="description"
+        name="description"
+        autocomplete="off"
+        rows="2"
+        required
+        class="w-full text-lg px-3 py-2 rounded-md bg-white dark:bg-stone-950 border border-transparent hover:border-neutral-400 focus:border-teal-800 focus:outline-none transition-colors duration-300"
+      ></textarea>
+
+      <div class="flex flex-col md:flex-row md:gap-3 w-full">
+        <div class="w-full">
+          <label class="block text-lg mt-2">Tipo de Proyecto</label>
+          <select
+            id="type"
+            name="type"
+            required
+            class="w-full text-lg px-3 py-2 rounded-md bg-white dark:bg-stone-950 border border-transparent hover:border-neutral-400 focus:border-teal-800 focus:outline-none transition-colors duration-300 appearance-none"
+          ></select>
+        </div>
+        <div class="w-full">
+          <label class="block text-lg mt-2">Area</label>
+          <select
+            id="area"
+            name="area"
+            required
+            class="w-full text-lg px-3 py-2 rounded-md bg-white dark:bg-stone-950 border border-transparent hover:border-neutral-400 focus:border-teal-800 focus:outline-none transition-colors duration-300 appearance-none"
+          ></select>
+        </div>
+      </div>
+
+      <div class="flex flex-col md:flex-row md:gap-3 w-full">
+        <div class="w-full">
+          <label class="block text-lg mt-2">Precio Estimado</label>
+          <div class="relative flex items-center">
+            <span class="absolute left-3 text-stone-500">$</span>
+            <input
+              id="estimatedAmount"
+              name="estimatedAmount"
+              type="number"
+              min="0"
+              step="0.01"
+              inputmode="decimal"
+              autocomplete="off"
+              required
+              class="pl-7 w-full text-lg px-3 py-2 rounded-md bg-white dark:bg-stone-950 border border-transparent hover:border-neutral-400 focus:border-teal-800 focus:outline-none transition-colors duration-300"
+            />
+          </div>
+        </div>
+
+        <div class="w-full">
+          <label class="block text-lg mt-2">Duracion Estimada</label>
+          <div class="relative flex items-center">
+            <input
+              id="estimatedDuration"
+              name="estimatedDuration"
+              type="number"
+              min="1"
+              step="1"
+              inputmode="numeric"
+              autocomplete="off"
+              required
+              class="pr-16 w-full text-lg px-3 py-2 rounded-md bg-white dark:bg-stone-950 border border-transparent hover:border-neutral-400 focus:border-teal-800 focus:outline-none transition-colors duration-300"
+            />
+            <span class="absolute right-3 text-stone-500">meses</span>
+          </div>
+        </div>
+      </div>
+
+      <button
+        type="submit"
+        class="mt-5 w-full bg-teal-800 hover:bg-teal-600 text-white text-lg font-medium py-2 rounded-lg transition duration-300"
+      >
+        Crear Solicitud
+      </button>
+    </form>
+
+    <section
+      id="created-proposal"
+      class="hidden bg-stone-200 dark:bg-stone-900 rounded-lg p-4 flex flex-col gap-1 w-full"
+    >
+      <h1 class="text-2xl mb-2">Solicitud Creada</h1>
+      <label class="block text-lg">Nombre</label>
+      <input
+        id="new-name"
+        name="name"
+        readonly
+        class="px-3 py-2 text-lg rounded-md bg-white dark:bg-stone-950 focus:outline-none"
+      />
+
+      <label class="block text-lg mt-2">Descripcion</label>
+      <textarea
+        id="new-description"
+        name="description"
+        rows="2"
+        readonly
+        class="px-3 py-2 text-lg rounded-md bg-white dark:bg-stone-950 focus:outline-none"
+      ></textarea>
+
+      <div class="flex flex-col md:flex-row md:gap-3 w-full">
+        <div class="w-full">
+          <label class="block text-lg mt-2">Tipo de Proyecto</label>
+          <input
+            id="new-type"
+            name="type"
+            readonly
+            class="w-full px-3 py-2 text-lg rounded-md bg-white dark:bg-stone-950 focus:outline-none"
+          />
+        </div>
+        <div class="w-full">
+          <label class="block text-lg mt-2">Area</label>
+          <input
+            id="new-area"
+            name="area"
+            readonly
+            class="w-full px-3 py-2 text-lg rounded-md bg-white dark:bg-stone-950 focus:outline-none"
+          />
+        </div>
+      </div>
+
+      <div class="flex flex-col md:flex-row md:gap-3 w-full">
+        <div class="w-full">
+          <label class="block text-lg mt-2">Precio Estimado</label>
+          <input
+            id="new-estimatedAmount"
+            name="estimatedAmount"
+            readonly
+            class="w-full px-3 py-2 text-lg rounded-md bg-white dark:bg-stone-950 focus:outline-none"
+          />
+        </div>
+
+        <div class="w-full">
+          <label class="block text-lg mt-2">Duracion Estimada</label>
+          <input
+            id="new-estimatedDuration"
+            name="estimatedDuration"
+            readonly
+            class="w-full px-3 py-2 text-lg rounded-md bg-white dark:bg-stone-950 focus:outline-none"
+          />
+        </div>
+      </div>
+
+      <label class="block text-lg mt-2">Creado por</label>
+      <input
+        id="new-createBy"
+        name="createBy"
+        readonly
+        class="px-3 py-2 text-lg rounded-md bg-white dark:bg-stone-950 focus:outline-none"
+      />
+    </section>
+  </div>
+</section>

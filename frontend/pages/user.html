@@ -1,0 +1,49 @@
+<section class="flex flex-col p-10 gap-2">
+  <h1 class="text-4xl font-semibold mb-3">Usuario</h1>
+  <div class="flex flex-col lg:flex-row lg:items-start gap-4">
+    <section
+      class="bg-stone-200 dark:bg-stone-900 rounded-lg p-4 flex flex-col w-full"
+    >
+      <label class="block text-lg">Nombre</label>
+      <input
+        id="name"
+        name="name"
+        readonly
+        class="text-lg rounded-md px-3 py-2 transition duration-300 bg-white dark:bg-stone-950 focus:outline-none"
+      />
+
+      <label class="block text-lg mt-2">Email</label>
+      <input
+        id="email"
+        name="email"
+        readonly
+        class="text-lg rounded-md px-3 py-2 transition duration-300 bg-white dark:bg-stone-950 focus:outline-none"
+      />
+
+      <label class="block text-lg mt-2">Rol</label>
+      <input
+        id="role"
+        name="role"
+        readonly
+        class="text-lg rounded-md px-3 py-2 transition duration-300 bg-white dark:bg-stone-950 focus:outline-none"
+      />
+
+      <button
+        id="logout-btn"
+        class="mt-5 w-full bg-teal-800 hover:bg-teal-600 text-white text-lg font-medium py-2 rounded-lg transition duration-300"
+      >
+        Cerrar sesión
+      </button>
+    </section>
+
+    <section
+      class="bg-stone-200 dark:bg-stone-900 rounded-lg p-4 flex flex-col gap-1 w-full"
+    >
+      <h1 class="text-2xl mb-4">Cambiar Usuario</h1>
+      <ul
+        id="user-list"
+        class="w-full divide-y divide-stone-400 dark:divide-stone-700"
+      ></ul>
+    </section>
+  </div>
+</section>

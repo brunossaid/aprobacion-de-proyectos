@@ -1,0 +1,20 @@
+body.drawer-open #drawer {
+  position: fixed;
+  top: 0;
+  left: 0;
+  height: 100vh;
+  width: 16rem;
+  background-color: #f3f4f6;
+  z-index: 50;
+}
+
+body.drawer-open #main {
+  margin-left: 16rem;
+  overflow: auto;
+}
+
+input[type="number"]::-webkit-outer-spin-button,
+input[type="number"]::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
