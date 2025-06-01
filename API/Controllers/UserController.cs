@@ -29,5 +29,25 @@ namespace WebApi.Controllers
 
             return Ok(userDtos);
         }
+
+        [HttpGet("{id}")]
+        [SwaggerOperation(Summary = "Obtener un usuario por ID")]
+        [ProducesResponseType(typeof(UserDto), StatusCodes.Status200OK)]
+        [ProducesResponseType(typeof(ErrorResponse), StatusCodes.Status404NotFound)]
+        public async Task<ActionResult<UserDto>> GetUserById(int id)
+        {
+            var user = await _userService.GetByIdAsync(id);
+            if (user == null)
+            {
+                var error = new ErrorResponse
+                {
+                    Message = $"No se encontro el usuario con ID {id}"
+                };
+                return NotFound(error);
+            }
+
+            var userDto = _mapper.Map<UserDto>(user);
+            return Ok(userDto);
+        }
     }
 }
