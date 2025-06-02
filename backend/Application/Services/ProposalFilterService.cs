@@ -7,12 +7,15 @@ namespace Application.Services
     public class ProposalFilterService
     {
         private readonly IProjectProposalReader _proposalReader;
-        private readonly IProjectApprovalStepReader _stepReader;
+        private readonly ApprovalStepManager _approvalStepManager;
 
-        public ProposalFilterService(IProjectProposalReader proposalReader, IProjectApprovalStepReader stepReader)
+        public ProposalFilterService(
+            IProjectProposalReader proposalReader,
+            ApprovalStepManager approvalStepManager 
+        )
         {
             _proposalReader = proposalReader;
-            _stepReader = stepReader;
+            _approvalStepManager = approvalStepManager;
         }
 
         public async Task<List<ProjectProposal>> GetFilteredAsync(ProjectProposalFilterDto filters)
@@ -38,14 +41,14 @@ namespace Application.Services
 
             if (filters.ApproverUserId.HasValue)
             {
-                var steps = await _stepReader.GetAllAsync();
-                var filteredIds = steps
-                    .Where(s => s.ApproverUserId == filters.ApproverUserId)
-                    .Select(s => s.ProjectProposalId)
+                var pendingSteps = await _approvalStepManager.GetPendingStepsForUserAsync(filters.ApproverUserId.Value);
+
+                var approvableProposalIds = pendingSteps
+                    .Select(step => step.ProjectProposalId)
                     .Distinct()
                     .ToHashSet();
 
-                query = query.Where(p => filteredIds.Contains(p.Id));
+                query = query.Where(p => approvableProposalIds.Contains(p.Id));
             }
 
             return query.ToList();
