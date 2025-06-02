@@ -9,7 +9,7 @@
 
       <div class="flex flex-col md:flex-row md:flex-wrap gap-3">
         <div class="flex-1">
-          <label class="block text-lg">Título</label>
+          <label class="block text-lg">Titulo</label>
           <input
             id="title"
             name="title"
@@ -42,6 +42,31 @@
       class="bg-stone-200 dark:bg-stone-900 rounded-lg p-4 flex flex-col gap-1 w-full"
     >
       <h1 class="text-2xl mb-2">Proyectos</h1>
+
+      <div class="relative overflow-x-auto shadow-md sm:rounded-lg">
+        <table
+          class="w-full text-sm text-center text-stone-800 dark:text-white"
+        >
+          <thead
+            class="text-xs uppercase text-stone-700 dark:text-stone-300 bg-neutral-300 dark:bg-stone-800"
+          >
+            <tr>
+              <th scope="col" class="px-6 py-4 text-left">Titulo</th>
+              <th scope="col" class="px-6 py-4 text-left hidden xl:table-cell">
+                Descripcion
+              </th>
+              <th scope="col" class="px-6 py-4 hidden lg:table-cell">Precio</th>
+              <th scope="col" class="px-6 py-4 hidden lg:table-cell">
+                Duracion
+              </th>
+              <th scope="col" class="px-6 py-4">Area</th>
+              <th scope="col" class="px-6 py-4">Tipo</th>
+              <th scope="col" class="px-6 py-4">Accion</th>
+            </tr>
+          </thead>
+          <tbody></tbody>
+        </table>
+      </div>
     </section>
   </div>
 </section>

@@ -1,4 +1,5 @@
 import { setupCreateProposalForm } from "./create-proposal.js";
+import { setupProposalsForm } from "./proposal-filters.js";
 import { loadUserDetails, loadUserList, logout } from "./user.js";
 
 // cargar paginas
@@ -21,6 +22,9 @@ export function loadPage(page) {
       }
       if (page === "create-proposal") {
         setupCreateProposalForm();
+      }
+      if (page === "my-proposals") {
+        setupProposalsForm();
       }
     })
     .catch((err) => {

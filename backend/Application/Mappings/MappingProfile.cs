@@ -53,6 +53,8 @@ namespace Application.Mappings
             CreateMap<ProjectProposal, ProjectProposalListDto>()
                 .ForMember(dest => dest.Area, opt => opt.MapFrom(src => src.AreaNavigation.Name))
                 .ForMember(dest => dest.Type, opt => opt.MapFrom(src => src.TypeNavigation.Name))
+                .ForMember(dest => dest.Amount, opt => opt.MapFrom(src => src.EstimatedAmount))
+                .ForMember(dest => dest.Duration, opt => opt.MapFrom(src => src.EstimatedDuration))
                 .ForMember(dest => dest.Status, opt => opt.MapFrom(src => src.StatusNavigation.Name));
         }
     }
