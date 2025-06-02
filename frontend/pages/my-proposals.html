@@ -1,0 +1,47 @@
+<section class="flex flex-col p-10 gap-2">
+  <h1 class="text-4xl font-semibold mb-3">Mis Solicitudes de Proyecto</h1>
+  <div class="flex flex-col gap-4">
+    <form
+      id="project-filter"
+      class="w-full max-w-5xl flex flex-col bg-stone-200 dark:bg-stone-900 rounded-lg p-4"
+    >
+      <h1 class="text-2xl mb-2">Filtros</h1>
+
+      <div class="flex flex-col md:flex-row md:flex-wrap gap-3">
+        <div class="flex-1">
+          <label class="block text-lg">Título</label>
+          <input
+            id="title"
+            name="title"
+            autocomplete="off"
+            class="w-full text-lg px-3 py-2 rounded-md bg-white dark:bg-stone-950 border border-transparent hover:border-neutral-400 focus:border-teal-800 focus:outline-none transition-colors duration-300"
+          />
+        </div>
+
+        <div class="flex-1">
+          <label class="block text-lg">Estado</label>
+          <select
+            id="status"
+            name="status"
+            class="w-full text-lg px-3 py-2 rounded-md bg-white dark:bg-stone-950 border border-transparent hover:border-neutral-400 focus:border-teal-800 focus:outline-none transition-colors duration-300 appearance-none"
+          ></select>
+        </div>
+
+        <div class="flex flex-1 md:basis-full lg:basis-auto items-end">
+          <button
+            type="submit"
+            class="w-full h-[46px] bg-teal-800 hover:bg-teal-600 text-white text-lg font-medium py-2 rounded-md transition duration-300 mt-2 md:mt-0"
+          >
+            Buscar
+          </button>
+        </div>
+      </div>
+    </form>
+
+    <section
+      class="bg-stone-200 dark:bg-stone-900 rounded-lg p-4 flex flex-col gap-1 w-full"
+    >
+      <h1 class="text-2xl mb-2">Proyectos</h1>
+    </section>
+  </div>
+</section>

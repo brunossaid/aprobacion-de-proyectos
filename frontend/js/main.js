@@ -2,7 +2,7 @@ import { setupNavLinks, loadPage } from "./navigation.js";
 import { applySavedTheme, toggleTheme } from "./theme.js";
 import { loginView } from "./user.js";
 
-let user = false; // false loguearme, true ya estoy logueado
+let user = true; // false loguearme, true ya estoy logueado
 
 // cargar la app
 document.addEventListener("DOMContentLoaded", () => {
@@ -32,6 +32,6 @@ export function initializeApp() {
       }
 
       applySavedTheme();
-      loadPage("create-proposal");
+      loadPage("my-proposals");
     });
 }
