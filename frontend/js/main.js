@@ -2,11 +2,11 @@ import { setupNavLinks, loadPage } from "./navigation.js";
 import { applySavedTheme, toggleTheme } from "./theme.js";
 import { loginView } from "./user.js";
 
-let user = true; // false loguearme, true ya estoy logueado
+// let user = false; // false loguearme, true ya estoy logueado
 
 // cargar la app
 document.addEventListener("DOMContentLoaded", () => {
-  // const user = localStorage.getItem("user");
+  const user = localStorage.getItem("user");
   if (!user) {
     loginView();
   } else {
@@ -32,6 +32,12 @@ export function initializeApp() {
       }
 
       applySavedTheme();
-      loadPage("my-proposals");
+
+      const lastPage = JSON.parse(localStorage.getItem("lastPage"));
+      if (lastPage?.page) {
+        loadPage(lastPage.page, lastPage.id);
+      } else {
+        loadPage("home");
+      }
     });
 }

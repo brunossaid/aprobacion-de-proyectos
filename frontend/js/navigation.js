@@ -1,9 +1,14 @@
 import { setupCreateProposalForm } from "./create-proposal.js";
 import { setupProposalsForm } from "./proposal-filters.js";
 import { loadUserDetails, loadUserList, logout } from "./user.js";
+import { loadProposalData, setupEditHandlers } from "./proposal.js";
 
 // cargar paginas
-export function loadPage(page) {
+export function loadPage(page, id) {
+  const state = { page };
+  if (id) state.id = id;
+  localStorage.setItem("lastPage", JSON.stringify(state));
+
   fetch(`pages/${page}.html`)
     .then((res) => res.text())
     .then((html) => {
@@ -16,6 +21,7 @@ export function loadPage(page) {
           logout();
         });
       }
+
       if (page === "user") {
         loadUserDetails();
         loadUserList();
@@ -25,6 +31,10 @@ export function loadPage(page) {
       }
       if (page === "my-proposals") {
         setupProposalsForm();
+      }
+      if (page === "proposal" && id) {
+        loadProposalData(id);
+        setupEditHandlers();
       }
     })
     .catch((err) => {
@@ -40,7 +50,13 @@ export function setupNavLinks() {
     if (target) {
       e.preventDefault();
       const page = target.getAttribute("data-page");
-      loadPage(page);
+      const id = target.getAttribute("data-id");
+
+      if (page === "proposal" && id) {
+        loadPage(page, id);
+      } else {
+        loadPage(page);
+      }
     }
   });
 }

@@ -1,3 +1,5 @@
+import { getRowBgClass, translateStatus } from "./utils.js";
+
 export async function setupProposalsForm() {
   await setupFiltersAndInitialTable();
   await filterProposals();
@@ -23,20 +25,11 @@ async function loadStatusOptions() {
     const statuses = await response.json();
     const select = document.getElementById("status");
 
-    const statusTranslations = {
-      Pending: "Pendiente",
-      Approved: "Aprobado",
-      Rejected: "Rechazado",
-      Observed: "Observado",
-    };
-
     select.innerHTML = `<option value="">Cualquiera</option>`;
     statuses.forEach((status) => {
       const option = document.createElement("option");
       option.value = status.id;
-
-      option.textContent = statusTranslations[status.name] || status.name;
-
+      option.textContent = translateStatus(status.name);
       select.appendChild(option);
     });
   } catch (error) {
@@ -87,24 +80,16 @@ function renderProposalTable(proposals) {
       <td class="px-6 py-4">${proposal.area}</td>
       <td class="px-6 py-4">${proposal.type}</td>
       <td class="px-6 py-4">
-        <a href="proposal-detail.html?id=${proposal.id}" title="Ver propuesta">
-          <i class="bi bi-eye-fill text-lg cursor-pointer hover:text-xl"></i>
+        <a href="#" 
+          data-page="proposal" 
+          data-id="${proposal.id}" 
+          title="Ver propuesta" 
+          class="cursor-pointer">
+          <i class="bi bi-eye-fill text-lg hover:text-xl"></i>
         </a>
       </td>
     `;
 
     tbody.appendChild(tr);
   });
-}
-
-// colores de fondo por estado
-function getRowBgClass(status) {
-  const statusColorMap = {
-    Pending: "bg-orange-300 dark:bg-orange-500",
-    Approved: "bg-green-300 dark:bg-green-700",
-    Rejected: "bg-red-400 dark:bg-red-600",
-    Observed: "bg-blue-300 dark:bg-sky-600",
-  };
-
-  return statusColorMap[status] || "";
 }

@@ -1,4 +1,5 @@
 import { initializeApp } from "./main.js";
+import { applySavedTheme } from "./theme.js";
 
 // login
 export function loginView() {
@@ -6,6 +7,7 @@ export function loginView() {
     .then((res) => res.text())
     .then((html) => {
       document.getElementById("main").innerHTML = html;
+      applySavedTheme();
       setupAuthForm();
       loadUsers();
     });
