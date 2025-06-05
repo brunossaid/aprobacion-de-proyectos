@@ -12,6 +12,7 @@ export function loginView() {
       loadUsers();
     });
 }
+let loadedUsers = [];
 
 // cargar usuarios para el select
 async function loadUsers() {
@@ -19,6 +20,7 @@ async function loadUsers() {
     const res = await fetch("http://localhost:5103/api/User");
     if (!res.ok) throw new Error("Error al cargar usuarios");
     const users = await res.json();
+    loadedUsers = users;
 
     const select = document.getElementById("user-select");
     if (!select) return;
@@ -39,12 +41,11 @@ function setupAuthForm() {
   const form = document.getElementById("auth-form");
   form?.addEventListener("submit", (e) => {
     e.preventDefault();
-    const selectedUser = document.getElementById("user-select")?.value;
+    const selectedId = document.getElementById("user-select")?.value;
+    const selectedUser = loadedUsers.find((u) => u.id == selectedId);
     if (selectedUser) {
-      localStorage.setItem("user", selectedUser);
-      const selectedUserText =
-        document.getElementById("user-select").selectedOptions[0].textContent;
-      console.log(`hola ${selectedUserText}!`);
+      localStorage.setItem("user", JSON.stringify(selectedUser));
+      console.log(`hola ${selectedUser.name}!`);
       initializeApp();
     }
   });
@@ -65,21 +66,14 @@ export function logout() {
 
 // cargar datos del usuario
 export async function loadUserDetails() {
-  const userId = localStorage.getItem("user");
-  if (!userId) return;
+  const userStr = localStorage.getItem("user");
+  if (!userStr) return;
 
-  try {
-    const res = await fetch(`http://localhost:5103/api/User/${userId}`);
-    if (!res.ok) throw new Error("Error al cargar datos del usuario");
+  const user = JSON.parse(userStr);
 
-    const user = await res.json();
-
-    document.getElementById("name").value = user.name || "";
-    document.getElementById("email").value = user.email || "";
-    document.getElementById("role").value = user.role.name || "";
-  } catch (error) {
-    console.error(error);
-  }
+  document.getElementById("name").value = user.name || "";
+  document.getElementById("email").value = user.email || "";
+  document.getElementById("role").value = user.role?.name || "";
 }
 
 // cargar lista de usuarios
@@ -89,10 +83,10 @@ export async function loadUserList() {
     if (!res.ok) throw new Error("Error al cargar usuarios");
     const users = await res.json();
 
-    const userListSection = document.getElementById("user-list"); // O el id del contenedor que tengas para la lista
+    const userListSection = document.getElementById("user-list");
     if (!userListSection) return;
 
-    const selectedUserId = localStorage.getItem("user");
+    const selectedUser = JSON.parse(localStorage.getItem("user"));
 
     userListSection.innerHTML = "";
 
@@ -104,7 +98,7 @@ export async function loadUserList() {
       li.className =
         "px-3 py-3 sm:py-4 cursor-pointer flex items-center space-x-4 rtl:space-x-reverse";
 
-      if (selectedUserId === String(user.id)) {
+      if (selectedUser && String(selectedUser.id) === String(user.id)) {
         li.classList.add("bg-teal-600", "text-white", "rounded-md");
       }
 
@@ -120,7 +114,7 @@ export async function loadUserList() {
       `;
 
       li.addEventListener("click", () => {
-        localStorage.setItem("user", user.id);
+        localStorage.setItem("user", JSON.stringify(user));
         loadUserDetails();
         loadUserList();
       });

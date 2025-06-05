@@ -1,16 +1,26 @@
 <section class="flex flex-col p-10 gap-2">
-  <h1 class="text-4xl font-semibold mb-3">Solicitud de Proyecto</h1>
-  <div class="flex flex-col lg:flex-row lg:items-start gap-4">
+  <div class="flex items-center justify-between">
+    <h1 class="text-4xl font-semibold mb-3">Solicitud de Proyecto</h1>
+    <button
+      id="evaluate-proposal-btn"
+      class="hidden bg-teal-800 hover:bg-teal-600 text-white text-lg font-medium py-2 px-6 rounded-md transition duration-300"
+    >
+      Evaluar Proyecto
+    </button>
+  </div>
+  <div class="flex flex-col gap-4">
+    <!-- proyecto -->
     <form
       id="edit-proposal-form"
       class="bg-stone-200 dark:bg-stone-900 rounded-lg p-4 flex flex-col w-full"
     >
+      <!-- titulo y botones -->
       <div class="flex items-center justify-between mb-2">
         <h1 class="text-2xl">Proyecto</h1>
         <i
           id="edit-btn"
           title="Editar propuesta"
-          class="bi bi-pencil-fill text-xl cursor-pointer transition-transform duration-200 hover:scale-125"
+          class="hidden bi bi-pencil-fill text-xl cursor-pointer transition-transform duration-200 hover:scale-125"
         ></i>
         <div class="hidden flex gap-2 items-center">
           <i
@@ -26,122 +36,206 @@
         </div>
       </div>
 
-      <div class="flex flex-col md:flex-row md:gap-3 w-full">
-        <div class="w-full">
-          <label class="block text-lg">Nombre</label>
-          <input
-            id="name"
-            name="name"
-            autocomplete="off"
-            readonly
-            class="w-full text-lg px-3 py-2 rounded-md bg-white dark:bg-stone-950 border border-transparent hover:border-neutral-400 focus:border-teal-800 focus:outline-none transition-colors duration-300"
-          />
-        </div>
-        <div class="w-full">
-          <label class="block text-lg">Estado</label>
-          <input
-            id="status"
-            name="status"
-            readonly
-            class="w-full text-lg rounded-md px-3 py-2 focus:outline-none"
-          />
-        </div>
-      </div>
-
-      <label class="block text-lg mt-2">Descripcion</label>
-      <textarea
-        id="description"
-        name="description"
-        autocomplete="off"
-        rows="2"
-        readonly
-        class="w-full text-lg px-3 py-2 rounded-md bg-white dark:bg-stone-950 border border-transparent hover:border-neutral-400 focus:border-teal-800 focus:outline-none transition-colors duration-300"
-      ></textarea>
-
-      <div class="flex flex-col md:flex-row md:gap-3 w-full">
-        <div class="w-full">
-          <label class="block text-lg mt-2">Tipo de Proyecto</label>
-          <input
-            id="type"
-            name="type"
-            readonly
-            class="w-full text-lg rounded-md px-3 py-2 bg-white dark:bg-stone-950 focus:outline-none"
-          />
-        </div>
-        <div class="w-full">
-          <label class="block text-lg mt-2">Area</label>
-          <input
-            id="area"
-            name="area"
-            readonly
-            class="w-full text-lg rounded-md px-3 py-2 bg-white dark:bg-stone-950 focus:outline-none"
-          />
-        </div>
-      </div>
-
-      <div class="flex flex-col md:flex-row md:gap-3 w-full">
-        <div class="w-full">
-          <label class="block text-lg mt-2">Precio Estimado</label>
-          <div class="relative flex items-center">
-            <input
-              id="estimatedAmount"
-              name="estimatedAmount"
-              readonly
-              class="w-full text-lg rounded-md px-3 py-2 bg-white dark:bg-stone-950 focus:outline-none"
-            />
+      <!-- campos -->
+      <div class="flex flex-col lg:flex-row lg:gap-3 w-full">
+        <!-- title, status, createBy, creationDate, description -->
+        <div class="lg:w-2/3">
+          <!-- title, status -->
+          <div class="flex flex-col md:flex-row md:gap-3 w-full">
+            <div class="w-full">
+              <label class="block text-lg">Titulo</label>
+              <input
+                id="title"
+                name="title"
+                autocomplete="off"
+                readonly
+                class="w-full text-lg px-3 py-2 rounded-md bg-white dark:bg-stone-950 border border-transparent focus:outline-none transition-colors duration-300"
+              />
+            </div>
+            <div class="w-full mt-2 md:mt-0">
+              <label class="block text-lg">Estado</label>
+              <input
+                id="status"
+                name="status"
+                readonly
+                class="w-full text-lg rounded-md px-3 py-2 focus:outline-none"
+              />
+            </div>
           </div>
-        </div>
 
-        <div class="w-full">
-          <label class="block text-lg mt-2">Duracion Estimada</label>
-          <div class="relative flex items-center">
-            <input
-              id="estimatedDuration"
-              name="estimatedDuration"
-              type="number"
-              min="1"
-              step="1"
-              inputmode="numeric"
+          <!-- createBy, creationDate -->
+          <div class="flex flex-col md:flex-row md:gap-3 md:mt-2 w-full">
+            <div class="w-full mt-2 md:mt-0">
+              <label class="block text-lg">Usuario</label>
+              <input
+                id="createBy"
+                name="createBy"
+                readonly
+                class="w-full text-lg rounded-md px-3 py-2 bg-white dark:bg-stone-950 focus:outline-none"
+              />
+            </div>
+
+            <div class="w-full mt-2 md:mt-0">
+              <label class="block text-lg">Fecha de Creacion</label>
+              <input
+                id="createAt"
+                name="createAt"
+                readonly
+                class="w-full text-lg rounded-md px-3 py-2 bg-white dark:bg-stone-950 border border-transparent focus:outline-none"
+              />
+            </div>
+          </div>
+
+          <!-- description -->
+          <div class="h-[154px] flex flex-col mt-2">
+            <label class="block text-lg">Descripcion</label>
+            <textarea
+              id="description"
+              name="description"
               autocomplete="off"
               readonly
-              class="w-full text-lg px-3 py-2 rounded-md bg-white dark:bg-stone-950 border border-transparent hover:border-neutral-400 focus:border-teal-800 focus:outline-none transition-colors duration-300"
-            />
-            <span class="absolute right-3 text-stone-500">meses</span>
-          </div>
-        </div>
-      </div>
-
-      <div class="flex flex-col md:flex-row md:gap-3 w-full">
-        <div class="w-full">
-          <label class="block text-lg mt-2">Usuario</label>
-          <div class="relative flex items-center">
-            <input
-              id="createBy"
-              name="createBy"
-              readonly
-              class="w-full text-lg rounded-md px-3 py-2 bg-white dark:bg-stone-950 focus:outline-none"
-            />
+              class="w-full h-full text-lg px-3 py-2 rounded-md bg-white dark:bg-stone-950 border border-transparent focus:outline-none transition-colors duration-300 overflow-auto resize-none"
+            ></textarea>
           </div>
         </div>
 
-        <div class="w-full">
-          <label class="block text-lg mt-2">Fecha de Creacion</label>
-          <div class="relative flex items-center">
-            <input
-              id="createAt"
-              name="createAt"
-              readonly
-              class="w-full text-lg rounded-md px-3 py-2 bg-white dark:bg-stone-950 focus:outline-none"
-            />
+        <!-- area, type, estimedPrice, estimedDuration -->
+        <div class="lg:w-1/3">
+          <!-- area, type -->
+          <div
+            class="flex flex-col md:flex-row lg:flex-col md:gap-x-3 md:mt-2 lg:mt-0 w-full"
+          >
+            <div class="w-full mt-2 md:mt-0">
+              <label class="block text-lg">Area</label>
+              <input
+                id="area"
+                name="area"
+                readonly
+                class="w-full text-lg rounded-md px-3 py-2 bg-white dark:bg-stone-950 border border-transparent focus:outline-none"
+              />
+            </div>
+
+            <div class="w-full mt-2 md:mt-0 lg:mt-2">
+              <label class="block text-lg">Tipo de Proyecto</label>
+              <input
+                id="type"
+                name="type"
+                readonly
+                class="w-full text-lg rounded-md px-3 py-2 bg-white dark:bg-stone-950 border border-transparent focus:outline-none"
+              />
+            </div>
+          </div>
+
+          <!-- estimedPrice, estimedDuration -->
+          <div
+            class="flex flex-col md:flex-row lg:flex-col md:gap-x-3 md:mt-2 lg:mt-0 w-full"
+          >
+            <div class="w-full mt-2 md:mt-0 lg:mt-2">
+              <label class="block text-lg">Precio Estimado</label>
+              <input
+                id="estimatedAmount"
+                name="estimatedAmount"
+                readonly
+                class="w-full text-lg rounded-md px-3 py-2 bg-white dark:bg-stone-950 border border-transparent focus:outline-none"
+              />
+            </div>
+
+            <div class="w-full mt-2 md:mt-0 lg:mt-2">
+              <label class="block text-lg">Duracion Estimada</label>
+              <div class="relative flex items-center">
+                <input
+                  id="estimatedDuration"
+                  name="estimatedDuration"
+                  type="number"
+                  min="1"
+                  step="1"
+                  inputmode="numeric"
+                  autocomplete="off"
+                  readonly
+                  class="w-full text-lg px-3 py-2 rounded-md bg-white dark:bg-stone-950 border border-transparent focus:outline-none transition-colors duration-300"
+                />
+                <span class="absolute right-3 text-stone-500">meses</span>
+              </div>
+            </div>
           </div>
         </div>
       </div>
     </form>
 
+    <!-- steps -->
     <section
-      class="bg-stone-200 dark:bg-stone-900 rounded-lg p-4 flex flex-col gap-1 w-full"
+      id="steps-table"
+      class="bg-stone-200 dark:bg-stone-900 gap-4 rounded-lg p-4 flex flex-col"
     >
-      <h1 class="text-2xl mb-2">Pasos de aprobacion</h1>
+      <h1 class="text-2xl">Pasos de Aprobacion</h1>
+
+      <div class="relative overflow-x-auto shadow-md sm:rounded-lg">
+        <table
+          class="w-full text-sm text-center text-stone-800 dark:text-white"
+        >
+          <thead
+            class="text-xs uppercase text-stone-700 dark:text-stone-300 bg-neutral-300 dark:bg-stone-800"
+          >
+            <tr>
+              <th scope="col" class="px-6 py-4 text-left">Paso</th>
+              <th scope="col" class="px-6 py-4">Rol Aprovador</th>
+              <th scope="col" class="px-6 py-4 hidden lg:table-cell">
+                Aprobado por
+              </th>
+              <th scope="col" class="px-6 py-4 hidden lg:table-cell">
+                Evaluado el
+              </th>
+              <th scope="col" class="px-6 py-4 text-left hidden xl:table-cell">
+                Observaciones
+              </th>
+              <th scope="col" class="px-6 py-4">Estado</th>
+            </tr>
+          </thead>
+          <tbody></tbody>
+        </table>
+      </div>
     </section>
+
+    <!-- evaluacion del proyecto -->
+    <form
+      id="review-project-form"
+      class="hidden w-full flex flex-col bg-stone-200 dark:bg-stone-900 rounded-lg p-4"
+    >
+      <div class="flex items-center justify-between mb-2">
+        <h1 class="text-2xl">Evaluacion de Proyecto</h1>
+        <div class="flex gap-2 items-center">
+          <i
+            id="save-review-btn"
+            title="Guardar"
+            class="bi bi-check2 text-2xl cursor-pointer transition-transform duration-200 hover:scale-125"
+          ></i>
+          <i
+            id="cancel-review-btn"
+            title="Cancelar"
+            class="bi bi-x text-3xl cursor-pointer transition-transform duration-200 hover:scale-125"
+          ></i>
+        </div>
+      </div>
+      <div class="flex flex-col md:flex-row md:flex-wrap gap-3">
+        <div class="flex-1">
+          <label class="block text-lg">Estado</label>
+          <select
+            id="status-select"
+            name="status"
+            class="text-lg px-3 py-2 rounded-md bg-white dark:bg-stone-950 border border-transparent hover:border-neutral-400 focus:border-teal-800 focus:outline-none transition-colors duration-300 appearance-none"
+          ></select>
+        </div>
+
+        <div class="flex-1">
+          <label class="block text-lg">Observaciones</label>
+          <input
+            id="observation"
+            name="observation"
+            autocomplete="off"
+            class="w-full text-lg px-3 py-2 rounded-md bg-white dark:bg-stone-950 border border-transparent hover:border-neutral-400 focus:border-teal-800 focus:outline-none transition-colors duration-300"
+          />
+        </div>
+      </div>
+    </form>
   </div>
 </section>

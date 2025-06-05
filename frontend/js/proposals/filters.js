@@ -1,4 +1,5 @@
-import { getRowBgClass, translateStatus } from "./utils.js";
+import { getRowBgClass, translateStatus } from "../utils.js";
+import { getFilteredProposals, getStatuses } from "../api/index.js";
 
 export async function setupProposalsForm() {
   await setupFiltersAndInitialTable();
@@ -19,10 +20,7 @@ async function setupFiltersAndInitialTable() {
 // cargar estados en el select
 async function loadStatusOptions() {
   try {
-    const response = await fetch("http://localhost:5103/api/ApprovalStatus");
-    if (!response.ok) throw new Error("Error al obtener los estados");
-
-    const statuses = await response.json();
+    const statuses = await getStatuses();
     const select = document.getElementById("status");
 
     select.innerHTML = `<option value="">Cualquiera</option>`;
@@ -41,7 +39,8 @@ async function loadStatusOptions() {
 async function filterProposals() {
   const title = document.getElementById("title").value.trim();
   const status = document.getElementById("status").value;
-  const createBy = localStorage.getItem("user");
+  const user = JSON.parse(localStorage.getItem("user"));
+  const createBy = user.id;
 
   const params = new URLSearchParams();
   if (title) params.append("title", title);
@@ -49,14 +48,7 @@ async function filterProposals() {
   if (createBy) params.append("createBy", createBy);
 
   try {
-    const response = await fetch(`http://localhost:5103/api/Project?${params}`);
-
-    if (!response.ok) {
-      const errorBody = await response.json();
-      throw new Error(`Error ${response.status}: ${errorBody}`);
-    }
-
-    const proposals = await response.json();
+    const proposals = await getFilteredProposals({ title, status, createBy });
     renderProposalTable(proposals);
   } catch (error) {
     console.error("error:", error.message);
@@ -69,27 +61,28 @@ function renderProposalTable(proposals) {
   tbody.innerHTML = "";
 
   proposals.forEach((proposal) => {
-    const tr = document.createElement("tr");
-    tr.className = getRowBgClass(proposal.status);
+    const row = document.createElement("tr");
+    row.className = `${getRowBgClass(
+      proposal.status
+    )} cursor-pointer hover:bg-neutral-200 transition-colors`;
 
-    tr.innerHTML = `
+    row.setAttribute("data-page", "proposal");
+    row.setAttribute("data-id", proposal.id);
+    row.setAttribute("title", "Ver Proyecto");
+
+    row.innerHTML = `
       <td class="px-6 py-4 text-left whitespace-nowrap">${proposal.title}</td>
-      <td class="px-6 py-4 text-left hidden xl:table-cell">${proposal.description}</td>
+      <td class="px-6 py-4 text-left hidden xl:table-cell">${
+        proposal.description
+      }</td>
       <td class="px-6 py-4 hidden lg:table-cell">$${proposal.amount}</td>
       <td class="px-6 py-4 hidden lg:table-cell">${proposal.duration} meses</td>
       <td class="px-6 py-4">${proposal.area}</td>
       <td class="px-6 py-4">${proposal.type}</td>
-      <td class="px-6 py-4">
-        <a href="#" 
-          data-page="proposal" 
-          data-id="${proposal.id}" 
-          title="Ver propuesta" 
-          class="cursor-pointer">
-          <i class="bi bi-eye-fill text-lg hover:text-xl"></i>
-        </a>
+      <td class="px-6 py-4">${translateStatus(proposal.status)}</i>
       </td>
     `;
 
-    tbody.appendChild(tr);
+    tbody.appendChild(row);
   });
 }

@@ -10,7 +10,7 @@ export function formatDate(isoString) {
 // colores de fondo por estado
 export function getRowBgClass(statusName) {
   const statusColorMap = {
-    Pending: "bg-orange-300 dark:bg-orange-500",
+    Pending: "bg-orange-400 dark:bg-orange-500",
     Approved: "bg-green-300 dark:bg-green-700",
     Rejected: "bg-red-400 dark:bg-red-600",
     Observed: "bg-blue-300 dark:bg-sky-600",

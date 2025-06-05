@@ -1,7 +1,11 @@
-import { setupCreateProposalForm } from "./create-proposal.js";
-import { setupProposalsForm } from "./proposal-filters.js";
 import { loadUserDetails, loadUserList, logout } from "./user.js";
-import { loadProposalData, setupEditHandlers } from "./proposal.js";
+import {
+  loadProposalData,
+  setupEditHandlers,
+  setupEvaluateHandler,
+  setupCreateProposalForm,
+  setupProposalsForm,
+} from "./proposals/index.js";
 
 // cargar paginas
 export function loadPage(page, id) {
@@ -35,6 +39,7 @@ export function loadPage(page, id) {
       if (page === "proposal" && id) {
         loadProposalData(id);
         setupEditHandlers();
+        setupEvaluateHandler();
       }
     })
     .catch((err) => {
