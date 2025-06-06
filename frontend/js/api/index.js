@@ -1,4 +1,9 @@
-export { getAreas, getProjectTypes, getStatuses } from "./information.js";
+export {
+  getAreas,
+  getProjectTypes,
+  getStatuses,
+  getUsers,
+} from "./information.js";
 export {
   createProjectProposal,
   updateProjectProposal,

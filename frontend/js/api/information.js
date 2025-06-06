@@ -13,7 +13,13 @@ export async function getProjectTypes() {
 }
 
 export async function getStatuses() {
-  const response = await fetch("http://localhost:5103/api/ApprovalStatus");
-  if (!response.ok) throw new Error("No se pudieron cargar los estados");
-  return response.json();
+  const res = await fetch(`${BASE_URL}/ApprovalStatus`);
+  if (!res.ok) throw new Error("Error al cargar estados");
+  return res.json();
+}
+
+export async function getUsers() {
+  const res = await fetch(`${BASE_URL}/User`);
+  if (!res.ok) throw new Error("Error al cargar usuarios");
+  return await res.json();
 }

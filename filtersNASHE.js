@@ -1,4 +1,5 @@
-import { getRowBgClass, translateStatus } from "./utils.js";
+import { getRowBgClass, translateStatus } from "../utils.js";
+import { getFilteredProposals, getStatuses } from "../api/index.js";
 
 export async function setupProposalsForm() {
   await setupFiltersAndInitialTable();
@@ -19,10 +20,7 @@ async function setupFiltersAndInitialTable() {
 // cargar estados en el select
 async function loadStatusOptions() {
   try {
-    const response = await fetch("http://localhost:5103/api/ApprovalStatus");
-    if (!response.ok) throw new Error("Error al obtener los estados");
-
-    const statuses = await response.json();
+    const statuses = await getStatuses();
     const select = document.getElementById("status");
 
     select.innerHTML = `<option value="">Cualquiera</option>`;
@@ -50,14 +48,7 @@ async function filterProposals() {
   if (createBy) params.append("createBy", createBy);
 
   try {
-    const response = await fetch(`http://localhost:5103/api/Project?${params}`);
-
-    if (!response.ok) {
-      const errorBody = await response.json();
-      throw new Error(`Error ${response.status}: ${errorBody}`);
-    }
-
-    const proposals = await response.json();
+    const proposals = await getFilteredProposals({ title, status, createBy });
     renderProposalTable(proposals);
   } catch (error) {
     console.error("error:", error.message);
@@ -75,7 +66,6 @@ function renderProposalTable(proposals) {
       proposal.status
     )} cursor-pointer hover:bg-neutral-200 transition-colors`;
 
-    // le agregamos los atributos que ya usabas en el <a>
     row.setAttribute("data-page", "proposal");
     row.setAttribute("data-id", proposal.id);
     row.setAttribute("title", "Ver Proyecto");

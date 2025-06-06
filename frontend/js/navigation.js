@@ -6,6 +6,7 @@ import {
   setupCreateProposalForm,
   setupProposalsForm,
 } from "./proposals/index.js";
+import { setupHome } from "./home.js";
 
 // cargar paginas
 export function loadPage(page, id) {
@@ -26,6 +27,9 @@ export function loadPage(page, id) {
         });
       }
 
+      if (page == "home") {
+        setupHome();
+      }
       if (page === "user") {
         loadUserDetails();
         loadUserList();
@@ -34,7 +38,10 @@ export function loadPage(page, id) {
         setupCreateProposalForm();
       }
       if (page === "my-proposals") {
-        setupProposalsForm();
+        setupProposalsForm("creator");
+      }
+      if (page === "review-proposals") {
+        setupProposalsForm("approver");
       }
       if (page === "proposal" && id) {
         loadProposalData(id);

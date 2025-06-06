@@ -1,19 +1,19 @@
 import { getRowBgClass, translateStatus } from "../utils.js";
 import { getFilteredProposals, getStatuses } from "../api/index.js";
 
-export async function setupProposalsForm() {
-  await setupFiltersAndInitialTable();
-  await filterProposals();
+export async function setupProposalsForm(filterMode = "creator") {
+  await setupFiltersAndInitialTable(filterMode);
+  await filterProposals(filterMode);
 }
 
-async function setupFiltersAndInitialTable() {
+async function setupFiltersAndInitialTable(filterMode) {
   await loadStatusOptions();
-  await filterProposals();
+  await filterProposals(filterMode);
 
   const form = document.getElementById("project-filter");
   form.addEventListener("submit", (event) => {
     event.preventDefault();
-    filterProposals();
+    filterProposals(filterMode);
   });
 }
 
@@ -36,19 +36,20 @@ async function loadStatusOptions() {
 }
 
 // filtrar propuestas
-async function filterProposals() {
+async function filterProposals(filterMode = "creator") {
   const title = document.getElementById("title").value.trim();
   const status = document.getElementById("status").value;
   const user = JSON.parse(localStorage.getItem("user"));
-  const createBy = user.id;
 
-  const params = new URLSearchParams();
-  if (title) params.append("title", title);
-  if (status) params.append("status", status);
-  if (createBy) params.append("createBy", createBy);
+  const filters = { title, status };
+  if (filterMode === "creator") {
+    filters.createBy = user.id;
+  } else if (filterMode === "approver") {
+    filters.approverUserId = user.id;
+  }
 
   try {
-    const proposals = await getFilteredProposals({ title, status, createBy });
+    const proposals = await getFilteredProposals(filters);
     renderProposalTable(proposals);
   } catch (error) {
     console.error("error:", error.message);

@@ -1,6 +1,49 @@
-<section class="flex flex-col h-full">
-  <h1 class="text-3xl font-semibold p-4">
-    HOMEeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee
-    :D
-  </h1>
+<section class="flex flex-col p-10 gap-4">
+  <h1 class="text-4xl font-semibold">Inicio</h1>
+
+  <section
+    class="flex-col bg-gradient-to-br from-teal-600 to-cyan-800 rounded-lg p-6 flex gap-2 text-white w-full max-w-xl"
+  >
+    <h1 id="user-name" class="text-4xl font-semibold">Cargando...</h1>
+    <div class="flex gap-2 items-center">
+      <i class="bi bi-person-fill text-2xl"></i>
+      <h1 id="user-role" class="text-2xl">...</h1>
+    </div>
+    <div class="flex gap-2 items-center">
+      <i class="bi bi-calendar-date text-2xl"></i>
+      <h1 id="date" class="text-2xl">--/--/--</h1>
+    </div>
+  </section>
+
+  <section class="bg-stone-200 dark:bg-stone-900 rounded-lg p-4 flex-col gap-2">
+    <h1 class="text-2xl mb-2">Resumen de Proyectos</h1>
+
+    <div class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-4 gap-2 w-full">
+      <div class="flex items-center gap-3 rounded-md px-3 py-3">
+        <i class="bi bi-hourglass-split text-3xl"></i>
+        <h1 id="pending-proposals" class="text-xl"></h1>
+      </div>
+      <div class="flex items-center gap-3 rounded-md px-3 py-3">
+        <i class="bi bi-check-circle-fill text-3xl"></i>
+        <h1 id="approved-proposals" class="text-xl"></h1>
+      </div>
+      <div class="flex items-center gap-3 rounded-md px-3 py-3">
+        <i class="bi bi-x-circle-fill text-3xl"></i>
+        <h1 id="rejected-proposals" class="text-xl"></h1>
+      </div>
+      <div class="flex items-center gap-3 rounded-md px-3 py-3">
+        <i class="bi bi-eye-fill text-3xl"></i>
+        <h1 id="observed-proposals" class="text-xl"></h1>
+      </div>
+    </div>
+
+    <hr class="my-3 border-t border-stone-300 dark:border-stone-800" />
+
+    <div
+      class="flex w-full max-w-sm text-white items-center gap-3 rounded-md px-3 py-3 bg-teal-800"
+    >
+      <i class="bi bi-eye-fill text-3xl"></i>
+      <h1 id="proposals-to-review" class="text-xl"></h1>
+    </div>
+  </section>
 </section>

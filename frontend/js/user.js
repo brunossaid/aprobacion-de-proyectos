@@ -1,5 +1,6 @@
 import { initializeApp } from "./main.js";
 import { applySavedTheme } from "./theme.js";
+import { getUsers } from "./api/index.js";
 
 // login
 export function loginView() {
@@ -17,9 +18,7 @@ let loadedUsers = [];
 // cargar usuarios para el select
 async function loadUsers() {
   try {
-    const res = await fetch("http://localhost:5103/api/User");
-    if (!res.ok) throw new Error("Error al cargar usuarios");
-    const users = await res.json();
+    const users = await getUsers();
     loadedUsers = users;
 
     const select = document.getElementById("user-select");
@@ -79,9 +78,7 @@ export async function loadUserDetails() {
 // cargar lista de usuarios
 export async function loadUserList() {
   try {
-    const res = await fetch("http://localhost:5103/api/User");
-    if (!res.ok) throw new Error("Error al cargar usuarios");
-    const users = await res.json();
+    const users = await getUsers();
 
     const userListSection = document.getElementById("user-list");
     if (!userListSection) return;
