@@ -19,6 +19,17 @@ export function getRowBgClass(statusName) {
   return statusColorMap[statusName] || "";
 }
 
+export const bg_classes = [
+  "bg-orange-400",
+  "dark:bg-orange-500",
+  "bg-green-300",
+  "dark:bg-green-700",
+  "bg-red-400",
+  "dark:bg-red-600",
+  "bg-blue-300",
+  "dark:bg-sky-600",
+];
+
 // traduccion de estados
 export function translateStatus(statusName) {
   const translations = {

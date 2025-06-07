@@ -71,6 +71,7 @@ async function saveApprovalStep() {
 
     console.log("evaluacion guardada");
     await loadProposalData(proposalId);
+    document.getElementById("observation").value = "";
   } catch (error) {
     console.error("error:", error);
     alert(error.message);

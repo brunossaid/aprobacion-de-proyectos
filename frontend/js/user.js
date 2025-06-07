@@ -24,11 +24,25 @@ async function loadUsers() {
     const select = document.getElementById("user-select");
     if (!select) return;
 
+    const defaultOption = document.createElement("option");
+    defaultOption.disabled = true;
+    defaultOption.selected = true;
+    defaultOption.hidden = true;
+    defaultOption.textContent = "Selecciona un usuario...";
+    select.appendChild(defaultOption);
+
     users.forEach((user) => {
       const option = document.createElement("option");
       option.value = user.id;
       option.textContent = user.name;
       select.appendChild(option);
+    });
+
+    select.addEventListener("change", () => {
+      const firstOption = select.querySelector("option[disabled]");
+      if (firstOption) {
+        firstOption.remove();
+      }
     });
   } catch (error) {
     console.error(error);
@@ -44,7 +58,6 @@ function setupAuthForm() {
     const selectedUser = loadedUsers.find((u) => u.id == selectedId);
     if (selectedUser) {
       localStorage.setItem("user", JSON.stringify(selectedUser));
-      console.log(`hola ${selectedUser.name}!`);
       initializeApp();
     }
   });
@@ -57,9 +70,8 @@ export function logout() {
 
   document.body.classList.remove("drawer-open");
 
-  console.log("chau!");
-
   localStorage.removeItem("user");
+  localStorage.removeItem("lastPage");
   loginView();
 }
 

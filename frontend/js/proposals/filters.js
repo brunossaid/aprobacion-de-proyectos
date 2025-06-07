@@ -30,6 +30,11 @@ async function loadStatusOptions() {
       option.textContent = translateStatus(status.name);
       select.appendChild(option);
     });
+
+    const storedStatus = localStorage.getItem("statusFilterFromHome");
+    if (storedStatus) {
+      select.value = storedStatus;
+    }
   } catch (error) {
     console.error("Error cargando estados:", error);
   }
@@ -38,10 +43,21 @@ async function loadStatusOptions() {
 // filtrar propuestas
 async function filterProposals(filterMode = "creator") {
   const title = document.getElementById("title").value.trim();
-  const status = document.getElementById("status").value;
-  const user = JSON.parse(localStorage.getItem("user"));
+  let status = document.getElementById("status").value;
 
+  const storedStatus = localStorage.getItem("statusFilterFromHome");
+  if (storedStatus) {
+    status = storedStatus;
+    const select = document.getElementById("status");
+    if (select) {
+      select.value = storedStatus;
+    }
+    localStorage.removeItem("statusFilterFromHome");
+  }
+
+  const user = JSON.parse(localStorage.getItem("user"));
   const filters = { title, status };
+
   if (filterMode === "creator") {
     filters.createBy = user.id;
   } else if (filterMode === "approver") {
@@ -65,7 +81,7 @@ function renderProposalTable(proposals) {
     const row = document.createElement("tr");
     row.className = `${getRowBgClass(
       proposal.status
-    )} cursor-pointer hover:bg-neutral-200 transition-colors`;
+    )} cursor-pointer hover:opacity-85 transition-opacity`;
 
     row.setAttribute("data-page", "proposal");
     row.setAttribute("data-id", proposal.id);

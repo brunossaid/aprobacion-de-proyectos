@@ -1,5 +1,10 @@
 import { getProjectProposalById } from "../api/index.js";
-import { formatDate, getRowBgClass, translateStatus } from "../utils.js";
+import {
+  formatDate,
+  getRowBgClass,
+  bg_classes,
+  translateStatus,
+} from "../utils.js";
 
 // cargar datos del proyecto
 export async function loadProposalData(id) {
@@ -33,9 +38,9 @@ function fillProposalForm(proposal) {
 
   const statusInput = document.getElementById("status");
   statusInput.value = translateStatus(proposal.status.name);
+  statusInput.classList.remove(...bg_classes);
   statusInput.classList.add(...getRowBgClass(proposal.status.name).split(" "));
 
-  // solo es editable cuando el status es observed
   const editBtn = document.getElementById("edit-btn");
   const editActions = editBtn.nextElementSibling;
 
@@ -46,7 +51,9 @@ function fillProposalForm(proposal) {
     editActions.classList.add("hidden");
   }
 
-  storeNextApprovalStepId(proposal.approvalSteps);
+  if (proposal.status.id !== 3) {
+    storeNextApprovalStepId(proposal.approvalSteps);
+  }
   fillApprovalSteps(proposal.approvalSteps);
 }
 
@@ -83,13 +90,17 @@ function storeNextApprovalStepId(steps) {
   const user = JSON.parse(localStorage.getItem("user"));
   const evaluateBtn = document.getElementById("evaluate-proposal-btn");
 
-  const nextStep = steps.find(
-    (step) =>
-      (step.status.id === 1 || step.status.id === 4) &&
-      step.approverRole.id === user.role.id
-  );
+  const sortedSteps = steps.slice().sort((a, b) => a.stepOrder - b.stepOrder);
 
-  if (nextStep) {
+  const nextStep = sortedSteps.find((step, index, arr) => {
+    const previousSteps = arr.slice(0, index);
+    const allPreviousApproved = previousSteps.every((s) => s.status.id === 2);
+    return (
+      (step.status.id === 1 || step.status.id === 4) && allPreviousApproved
+    );
+  });
+
+  if (nextStep && nextStep.approverRole.id === user.role.id) {
     localStorage.setItem("step", JSON.stringify(nextStep));
     evaluateBtn.classList.remove("hidden");
   } else {

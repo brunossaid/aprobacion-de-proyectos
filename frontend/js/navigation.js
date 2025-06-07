@@ -63,6 +63,11 @@ export function setupNavLinks() {
       e.preventDefault();
       const page = target.getAttribute("data-page");
       const id = target.getAttribute("data-id");
+      const statusId = target.getAttribute("data-status-id");
+
+      if (page === "my-proposals" && statusId) {
+        localStorage.setItem("statusFilterFromHome", statusId);
+      }
 
       if (page === "proposal" && id) {
         loadPage(page, id);
