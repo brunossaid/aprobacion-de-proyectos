@@ -105,7 +105,7 @@ export async function loadUserList() {
     users.forEach((user) => {
       const li = document.createElement("li");
       li.className =
-        "px-3 py-3 sm:py-4 cursor-pointer flex items-center space-x-4 rtl:space-x-reverse";
+        "px-3 py-3 sm:py-4 cursor-pointer hover:opacity-70 transition-opacity flex items-center space-x-4 rtl:space-x-reverse";
 
       if (selectedUser && String(selectedUser.id) === String(user.id)) {
         li.classList.add("bg-teal-600", "text-white", "rounded-md");

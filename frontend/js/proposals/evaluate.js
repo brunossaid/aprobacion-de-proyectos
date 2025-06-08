@@ -34,14 +34,22 @@ export function setupEvaluateHandler() {
 async function loadApprovalStatuses() {
   try {
     const statuses = await getStatuses();
-
+    const { status: stepStatus } = JSON.parse(localStorage.getItem("step"));
     const select = document.getElementById("status-select");
     select.innerHTML = "";
 
     statuses.forEach((status) => {
+      if (status.id === 1 && stepStatus.id !== 1) return;
+
       const option = document.createElement("option");
       option.value = status.id;
       option.textContent = translateStatus(status.name);
+      option.selected = status.id === stepStatus.id;
+
+      if (status.id === 1 && stepStatus.id === 1) {
+        option.disabled = true;
+      }
+
       select.appendChild(option);
     });
   } catch (error) {

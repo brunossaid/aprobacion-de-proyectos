@@ -3,6 +3,7 @@ import {
   getAreas,
   getProjectTypes,
 } from "../api/index.js";
+import { loadPage } from "../navigation.js";
 
 export async function setupCreateProposalForm() {
   await loadSelectOptions();
@@ -91,6 +92,13 @@ function displayCreatedProposal(proposal) {
     estimatedDuration: `${proposal.estimatedDuration} meses`,
     createBy: proposal.createBy.name,
   };
+
+  const viewBtn = document.getElementById("view-proposal-btn");
+  if (viewBtn) {
+    viewBtn.onclick = () => {
+      loadPage("proposal", proposal.id);
+    };
+  }
 
   for (const [key, value] of Object.entries(fields)) {
     const input = document.getElementById(`new-${key}`);
