@@ -55,8 +55,13 @@ export function loadPage(page, id) {
     });
 }
 
+let navLinksInitialized = false;
+
 // switchear paginas
 export function setupNavLinks() {
+  if (navLinksInitialized) return;
+  navLinksInitialized = true;
+
   document.addEventListener("click", (e) => {
     const target = e.target.closest("[data-page]");
     if (target) {

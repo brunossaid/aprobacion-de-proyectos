@@ -35,36 +35,41 @@ function fillSelect(id, options) {
   });
 }
 
-// crear solicitud
+// configura el submit
 function setupSubmitHandler() {
   const form = document.getElementById("create-proposal-form");
+  form.removeEventListener("submit", handleSubmit);
+  form.addEventListener("submit", handleSubmit);
+}
+
+// crear solicitud
+async function handleSubmit(e) {
+  e.preventDefault();
+
+  const form = e.target;
   const user = JSON.parse(localStorage.getItem("user"));
 
-  form.addEventListener("submit", async (e) => {
-    e.preventDefault();
+  const data = {
+    title: form.title.value,
+    description: form.description.value,
+    estimatedAmount: parseFloat(form.estimatedAmount.value),
+    estimatedDuration: parseInt(form.estimatedDuration.value),
+    area: parseInt(form.area.value),
+    projectType: parseInt(form.type.value),
+    createBy: user.id,
+  };
 
-    const data = {
-      title: form.title.value,
-      description: form.description.value,
-      estimatedAmount: parseFloat(form.estimatedAmount.value),
-      estimatedDuration: parseInt(form.estimatedDuration.value),
-      area: parseInt(form.area.value),
-      projectType: parseInt(form.type.value),
-      createBy: user.id,
-    };
+  try {
+    const result = await createProjectProposal(data);
 
-    try {
-      const result = await createProjectProposal(data);
-
-      alert("Solicitud creada con exito");
-      console.log("solicitud creada");
-      displayCreatedProposal(result);
-      form.reset();
-    } catch (error) {
-      console.error("error en la solicitud", error);
-      alert("Error al conectar con el servidor");
-    }
-  });
+    alert("Solicitud creada con exito");
+    console.log("solicitud creada");
+    displayCreatedProposal(result);
+    form.reset();
+  } catch (error) {
+    console.error("error en la solicitud", error);
+    alert("Error al conectar con el servidor");
+  }
 }
 
 // mostrar solicitud creada

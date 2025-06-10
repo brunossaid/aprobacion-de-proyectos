@@ -13,6 +13,7 @@ export function setupEvaluateHandler() {
   evaluateBtn.addEventListener("click", async () => {
     stepsTable.classList.add("hidden");
     reviewForm.classList.remove("hidden");
+    evaluateBtn.classList.add("hidden");
 
     await loadApprovalStatuses();
   });
@@ -20,6 +21,7 @@ export function setupEvaluateHandler() {
   cancelBtn.addEventListener("click", async () => {
     stepsTable.classList.remove("hidden");
     reviewForm.classList.add("hidden");
+    evaluateBtn.classList.remove("hidden");
   });
 
   saveBtn.addEventListener("click", async () => {

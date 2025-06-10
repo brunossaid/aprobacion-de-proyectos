@@ -44,6 +44,7 @@ namespace Application.Services
                 project.EstimatedDuration = updateDto.Duration.Value;
             }
 
+            project.Status = 1; // pending
             await _proposalWriter.UpdateAsync(project);
             return project;
         }
