@@ -20,8 +20,10 @@ async function setupFiltersAndInitialTable(filterMode) {
 // cargar estados en el select
 async function loadStatusOptions() {
   try {
-    const statuses = await getStatuses();
     const select = document.getElementById("status");
+    if (!select) return;
+
+    const statuses = await getStatuses();
 
     select.innerHTML = `<option value="">Cualquiera</option>`;
     statuses.forEach((status) => {
@@ -43,7 +45,8 @@ async function loadStatusOptions() {
 // filtrar propuestas
 async function filterProposals(filterMode = "creator") {
   const title = document.getElementById("title").value.trim();
-  let status = document.getElementById("status").value;
+  const select = document.getElementById("status");
+  let status = select ? select.value : "";
 
   const storedStatus = localStorage.getItem("statusFilterFromHome");
   if (storedStatus) {

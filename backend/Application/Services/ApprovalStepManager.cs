@@ -60,6 +60,9 @@ public class ApprovalStepManager
         if (user.Role != step.ApproverRoleId)
             throw new InvalidOperationException("El usuario no tiene permisos para aprobar este paso");
 
+    if (dto.Status == 1)
+        throw new InvalidOperationException("No se puede asignar estado pendiente.");
+
         step.Status = dto.Status;
         step.Observations = dto.Observation;
         step.DecisionDate = DateTime.UtcNow;
@@ -69,8 +72,6 @@ public class ApprovalStepManager
         // modificar estado del proyecto si corresponde
         switch (dto.Status)
         {
-            case 1:
-                throw new InvalidOperationException("No se puede asignar estado pendiente.");
             case 2:
                 var updatedSteps = await _stepReader.GetStepsByProjectIdAsync(projectId);
                 if (updatedSteps.All(s => s.Status == 2))

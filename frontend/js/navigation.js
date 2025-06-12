@@ -14,6 +14,10 @@ export function loadPage(page, id) {
   if (id) state.id = id;
   localStorage.setItem("lastPage", JSON.stringify(state));
 
+  if (page !== "proposal") {
+    localStorage.removeItem("step");
+  }
+
   fetch(`pages/${page}.html`)
     .then((res) => res.text())
     .then((html) => {
