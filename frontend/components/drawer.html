@@ -1,10 +1,19 @@
 <nav
-  class="fixed top-0 left-0 z-40 w-64 h-screen bg-stone-200 dark:bg-stone-900"
+  class="fixed top-0 left-0 z-40 w-20 md:w-64 h-screen bg-stone-200 dark:bg-stone-900 transition-all"
 >
   <div
-    class="flex items-center justify-between px-4 py-5 border-b border-stone-300 dark:border-stone-800"
+    class="flex items-center justify-center md:justify-between h-[65px] px-4 py-5 border-b border-stone-300 dark:border-stone-800"
   >
-    <a href="#" data-page="home" class="drawer-title">
+    <div class="md:hidden w-8">
+      <img
+        src="img/ap-logo-black.png"
+        alt="logo"
+        class="block dark:hidden w-full"
+      />
+      <img src="img/ap-logo.png" alt="logo" class="hidden dark:block w-full" />
+    </div>
+
+    <a href="#" data-page="home" class="hidden md:block drawer-title">
       <h5
         class="text-base font-semibold text-stone-950 uppercase dark:text-stone-200"
       >
@@ -18,51 +27,53 @@
       <a
         href="#"
         data-page="create-proposal"
-        class="flex items-center gap-2 p-4 rounded hover:bg-stone-300 dark:hover:bg-stone-800 page-link"
+        class="flex items-center justify-center md:justify-start gap-2 p-4 rounded hover:bg-stone-300 dark:hover:bg-stone-800 page-link"
       >
         <i class="bi bi-file-earmark-plus-fill text-xl"></i>
-        Crear Solicitud</a
-      >
+        <span class="hidden md:inline">Crear Solicitud</span>
+      </a>
     </li>
     <li>
       <a
         href="#"
         data-page="my-proposals"
-        class="flex items-center gap-2 p-4 rounded hover:bg-stone-300 dark:hover:bg-stone-800 page-link"
+        class="flex items-center justify-center md:justify-start gap-2 p-4 rounded hover:bg-stone-300 dark:hover:bg-stone-800 page-link"
       >
         <i class="bi bi-archive-fill text-xl"></i>
-        Mis Solicitudes</a
-      >
+        <span class="hidden md:inline">Mis Solicitudes</span>
+      </a>
     </li>
     <li>
       <a
         href="#"
         data-page="review-proposals"
-        class="flex items-center gap-2 p-4 rounded hover:bg-stone-300 dark:hover:bg-stone-800 page-link"
+        class="flex items-center justify-center md:justify-start gap-2 p-4 rounded hover:bg-stone-300 dark:hover:bg-stone-800 page-link"
       >
         <i class="bi bi-eye-fill text-xl"></i>
-        Revisar Solicitudes</a
-      >
+        <span class="hidden md:inline">Revisar Solicitudes</span>
+      </a>
     </li>
+
     <hr class="my-2 border-t border-stone-300 dark:border-stone-800" />
+
     <li>
       <a
         href="#"
         data-page="user"
-        class="flex items-center gap-2 p-4 rounded hover:bg-stone-300 dark:hover:bg-stone-800 page-link"
+        class="flex items-center justify-center md:justify-start gap-2 p-4 rounded hover:bg-stone-300 dark:hover:bg-stone-800 page-link"
       >
         <i class="bi bi-person-fill text-xl"></i>
-        Usuario</a
-      >
+        <span class="hidden md:inline">Usuario</span>
+      </a>
     </li>
     <li>
       <a
         href="#"
         id="themeToggle"
-        class="flex items-center gap-2 p-4 rounded hover:bg-stone-300 dark:hover:bg-stone-800 page-link"
+        class="flex items-center justify-center md:justify-start gap-2 p-4 rounded hover:bg-stone-300 dark:hover:bg-stone-800 page-link"
       >
         <i id="themeIcon" class="bi bi-moon-fill text-xl"></i>
-        <span id="themeLabel"></span>
+        <span id="themeLabel" class="hidden md:inline"></span>
       </a>
     </li>
   </ul>

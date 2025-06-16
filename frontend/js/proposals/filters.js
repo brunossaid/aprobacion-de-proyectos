@@ -97,10 +97,11 @@ function renderProposalTable(proposals) {
       }</td>
       <td class="px-6 py-4 hidden lg:table-cell">$${proposal.amount}</td>
       <td class="px-6 py-4 hidden lg:table-cell">${proposal.duration} meses</td>
-      <td class="px-6 py-4">${proposal.area}</td>
-      <td class="px-6 py-4">${proposal.type}</td>
-      <td class="px-6 py-4">${translateStatus(proposal.status)}</i>
-      </td>
+      <td class="px-6 py-4 hidden sm:table-cell">${proposal.area}</td>
+      <td class="px-6 py-4 hidden sm:table-cell">${proposal.type}</td>
+      <td class="px-6 py-4 hidden lg:table-cell">${translateStatus(
+        proposal.status
+      )}</td>
     `;
 
     tbody.appendChild(row);

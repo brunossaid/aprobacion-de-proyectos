@@ -4,13 +4,21 @@ body.drawer-open #drawer {
   left: 0;
   height: 100vh;
   width: 16rem;
-  background-color: #f3f4f6;
   z-index: 50;
 }
 
+/* Por defecto (pantallas chicas): */
 body.drawer-open #main {
-  margin-left: 16rem;
+  margin-left: 5rem; /* w-20 */
   overflow: auto;
+  transition: margin-left 0.2s ease;
+}
+
+/* En pantallas medianas o más (md = 768px) */
+@media (min-width: 768px) {
+  body.drawer-open #main {
+    margin-left: 16rem; /* w-64 */
+  }
 }
 
 input[type="number"]::-webkit-outer-spin-button,
