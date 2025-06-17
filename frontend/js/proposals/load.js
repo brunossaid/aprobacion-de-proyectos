@@ -39,10 +39,12 @@ function fillProposalForm(proposal) {
   statusInput.classList.remove(...bg_classes);
   statusInput.classList.add(...getRowBgClass(proposal.status.name).split(" "));
 
+  const user = JSON.parse(localStorage.getItem("user"));
+
   const editBtn = document.getElementById("edit-btn");
   const editActions = editBtn.nextElementSibling;
 
-  if (proposal.status.id === 4) {
+  if (proposal.status.id === 4 && proposal.createBy.id === user.id) {
     editBtn.classList.remove("hidden");
   } else {
     editBtn.classList.add("hidden");
