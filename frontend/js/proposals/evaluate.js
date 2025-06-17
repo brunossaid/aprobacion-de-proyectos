@@ -32,7 +32,6 @@ export function setupEvaluateHandler() {
   });
 }
 
-// select de status
 async function loadApprovalStatuses() {
   try {
     const statuses = await getStatuses();
@@ -59,7 +58,6 @@ async function loadApprovalStatuses() {
   }
 }
 
-// guardar evaluacion de step
 async function saveApprovalStep() {
   const state = JSON.parse(localStorage.getItem("lastPage"));
   const user = JSON.parse(localStorage.getItem("user"));

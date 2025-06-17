@@ -1,7 +1,6 @@
 import { getFilteredProposals } from "./api/index.js";
 import { getRowBgClass, translateStatus } from "./utils.js";
 
-// setear datos del home
 export async function setupHome() {
   const user = JSON.parse(localStorage.getItem("user"));
 

@@ -7,17 +7,15 @@ body.drawer-open #drawer {
   z-index: 50;
 }
 
-/* Por defecto (pantallas chicas): */
 body.drawer-open #main {
-  margin-left: 5rem; /* w-20 */
+  margin-left: 5rem;
   overflow: auto;
   transition: margin-left 0.2s ease;
 }
 
-/* En pantallas medianas o más (md = 768px) */
 @media (min-width: 768px) {
   body.drawer-open #main {
-    margin-left: 16rem; /* w-64 */
+    margin-left: 16rem;
   }
 }
 

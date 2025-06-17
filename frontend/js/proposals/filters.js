@@ -17,7 +17,6 @@ async function setupFiltersAndInitialTable(filterMode) {
   });
 }
 
-// cargar estados en el select
 async function loadStatusOptions() {
   try {
     const select = document.getElementById("status");
@@ -42,7 +41,6 @@ async function loadStatusOptions() {
   }
 }
 
-// filtrar propuestas
 async function filterProposals(filterMode = "creator") {
   const title = document.getElementById("title").value.trim();
   const select = document.getElementById("status");
@@ -75,7 +73,6 @@ async function filterProposals(filterMode = "creator") {
   }
 }
 
-// cargar tabla
 function renderProposalTable(proposals) {
   const tbody = document.querySelector("table tbody");
   tbody.innerHTML = "";

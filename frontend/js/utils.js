@@ -30,7 +30,6 @@ export const bg_classes = [
   "dark:bg-sky-600",
 ];
 
-// traduccion de estados
 export function translateStatus(statusName) {
   const translations = {
     Pending: "Pendiente",

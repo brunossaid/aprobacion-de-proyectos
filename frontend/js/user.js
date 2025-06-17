@@ -2,7 +2,6 @@ import { initializeApp } from "./main.js";
 import { applySavedTheme } from "./theme.js";
 import { getUsers } from "./api/index.js";
 
-// login
 export function loginView() {
   fetch("pages/login.html")
     .then((res) => res.text())
@@ -15,7 +14,6 @@ export function loginView() {
 }
 let loadedUsers = [];
 
-// cargar usuarios para el select
 async function loadUsers() {
   try {
     const users = await getUsers();
@@ -49,7 +47,6 @@ async function loadUsers() {
   }
 }
 
-// manejar login del form
 function setupAuthForm() {
   const form = document.getElementById("auth-form");
   form?.addEventListener("submit", (e) => {
@@ -63,7 +60,6 @@ function setupAuthForm() {
   });
 }
 
-// desloguear usuario
 export function logout() {
   const drawer = document.getElementById("drawer");
   drawer.innerHTML = "";
@@ -75,7 +71,6 @@ export function logout() {
   loginView();
 }
 
-// cargar datos del usuario
 export async function loadUserDetails() {
   const userStr = localStorage.getItem("user");
   if (!userStr) return;
@@ -87,7 +82,6 @@ export async function loadUserDetails() {
   document.getElementById("role").value = user.role?.name || "";
 }
 
-// cargar lista de usuarios
 export async function loadUserList() {
   try {
     const users = await getUsers();

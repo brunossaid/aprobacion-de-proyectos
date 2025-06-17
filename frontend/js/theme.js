@@ -1,4 +1,3 @@
-// cambiar tema
 export function toggleTheme() {
   const html = document.documentElement;
   const isDark = html.classList.toggle("dark");
@@ -6,7 +5,6 @@ export function toggleTheme() {
   updateThemeToggleUI(isDark);
 }
 
-// chequear tema guardado
 export function applySavedTheme() {
   const savedTheme = localStorage.getItem("theme");
   const html = document.documentElement;

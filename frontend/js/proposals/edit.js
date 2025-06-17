@@ -16,7 +16,6 @@ export function setupEditHandlers() {
   form.addEventListener("submit", saveEditedProposal);
 }
 
-// activar modo edicion
 function enableEditMode(editActions) {
   editMode = true;
   toggleEditButtons(true, editActions);
@@ -33,7 +32,6 @@ function enableEditMode(editActions) {
   });
 }
 
-// cancelar edicion
 function cancelEdit(editActions) {
   editMode = false;
   toggleEditButtons(false, editActions);
@@ -47,7 +45,6 @@ function cancelEdit(editActions) {
   });
 }
 
-// mostrar/ocultar botones
 function toggleEditButtons(editing, editActions) {
   document.getElementById("edit-btn").style.display = editing
     ? "none"
@@ -97,11 +94,9 @@ async function saveEditedProposal(e) {
   }
 }
 
-// campos editables y sus valores originales
 const editableFields = ["title", "description", "estimatedDuration"];
 const originalValues = {};
 
-// modo edicion
 let editMode = false;
 
 // clases de los inputs editables

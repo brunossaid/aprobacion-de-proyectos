@@ -10,7 +10,6 @@ export async function setupCreateProposalForm() {
   setupSubmitHandler();
 }
 
-// cargar areas y tipos
 async function loadSelectOptions() {
   try {
     const [types, areas] = await Promise.all([getProjectTypes(), getAreas()]);
@@ -22,7 +21,6 @@ async function loadSelectOptions() {
   }
 }
 
-// llenar selects
 function fillSelect(id, options) {
   const select = document.getElementById(id);
   select.innerHTML = "";
@@ -72,7 +70,6 @@ async function handleSubmit(e) {
   }
 }
 
-// mostrar solicitud creada
 function displayCreatedProposal(proposal) {
   const createdSection = document.getElementById("created-proposal");
 

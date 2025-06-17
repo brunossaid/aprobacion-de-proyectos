@@ -8,7 +8,6 @@ import {
 } from "./proposals/index.js";
 import { setupHome } from "./home.js";
 
-// cargar paginas
 export function loadPage(page, id) {
   const state = { page };
   if (id) state.id = id;
@@ -61,7 +60,6 @@ export function loadPage(page, id) {
 
 let navLinksInitialized = false;
 
-// switchear paginas
 export function setupNavLinks() {
   if (navLinksInitialized) return;
   navLinksInitialized = true;
@@ -87,7 +85,6 @@ export function setupNavLinks() {
   });
 }
 
-// actualizar estado activo del drawer
 function updateNavActiveState(activePage) {
   const navLinks = document.querySelectorAll(".page-link");
 

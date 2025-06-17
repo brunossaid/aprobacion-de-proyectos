@@ -6,7 +6,6 @@ import {
   translateStatus,
 } from "../utils.js";
 
-// cargar datos del proyecto
 export async function loadProposalData(id) {
   try {
     const proposal = await getProjectProposalById(id);
@@ -22,7 +21,6 @@ export async function loadProposalData(id) {
   }
 }
 
-// rellenar camposdel proposal
 function fillProposalForm(proposal) {
   document.getElementById("title").value = proposal.title;
   document.getElementById("description").value = proposal.description;
@@ -57,7 +55,6 @@ function fillProposalForm(proposal) {
   fillApprovalSteps(proposal.approvalSteps);
 }
 
-// rellenar tabla de steps
 function fillApprovalSteps(steps) {
   const tbody = document.querySelector("table tbody");
   tbody.innerHTML = "";
