@@ -203,10 +203,10 @@ public static class CreateProposal
                 Title = title,
                 Description = description,
                 Area = selectedArea.Id,
-                ProjectType = selectedType.Id,
-                EstimatedAmount = estimatedAmount,
-                EstimatedDuration = estimatedDuration,
-                CreateBy = currentUser.Id,
+                Type = selectedType.Id,
+                Amount = estimatedAmount,
+                Duration = estimatedDuration,
+                User = currentUser.Id,
             };
     }
 
@@ -222,9 +222,9 @@ public static class CreateProposal
         Console.WriteLine($"Titulo: {dto.Title}");
         Console.WriteLine($"Descripcion: {dto.Description}");
         Console.WriteLine($"Area: {areas.First(a => a.Id == dto.Area).Name}");
-        Console.WriteLine($"Tipo: {types.First(t => t.Id == dto.ProjectType).Name}");
-        Console.WriteLine($"Monto estimado: ${dto.EstimatedAmount}");
-        Console.WriteLine($"Tiempo estimado: {dto.EstimatedDuration} meses");
+        Console.WriteLine($"Tipo: {types.First(t => t.Id == dto.Type).Name}");
+        Console.WriteLine($"Monto estimado: ${dto.Amount}");
+        Console.WriteLine($"Tiempo estimado: {dto.Duration} meses");
 
         string? confirmation = null;
         while (confirmation != "s" && confirmation != "n")

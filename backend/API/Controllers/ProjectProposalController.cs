@@ -53,9 +53,13 @@ namespace Infrastructure.Controllers
                 var proposalDto = _mapper.Map<ProjectProposalDto>(proposal);
 
                 var steps = await _stepService.GetStepsByProjectIdAsync(proposal.Id);
-                proposalDto.ApprovalSteps = _mapper.Map<List<ProjectApprovalStepDto>>(steps);
+                proposalDto.Steps = _mapper.Map<List<ProjectApprovalStepDto>>(steps);
 
                 return CreatedAtAction(nameof(GetProposalById), new { id = proposal.Id }, proposalDto);
+            }
+            catch (ArgumentException ex)
+            {
+                return BadRequest(new ErrorResponse { Message = ex.Message });
             }
             catch (InvalidOperationException ex)
             {
@@ -76,7 +80,7 @@ namespace Infrastructure.Controllers
 
             var steps = await _stepService.GetStepsByProjectIdAsync(id);
             var proposalDto = _mapper.Map<ProjectProposalDto>(proposal);
-            proposalDto.ApprovalSteps = _mapper.Map<List<ProjectApprovalStepDto>>(steps);
+            proposalDto.Steps = _mapper.Map<List<ProjectApprovalStepDto>>(steps);
             return Ok(proposalDto);
         }
 
@@ -86,19 +90,14 @@ namespace Infrastructure.Controllers
         [SwaggerOperation(Summary = "Filtrar propuestas de proyecto")]
         public async Task<ActionResult<List<ProjectProposalListDto>>> GetProposals([FromQuery] ProjectProposalFilterDto filters)
         {
-            if (filters.Status.HasValue && (filters.Status < 1 || filters.Status > 4))
+            if (!ModelState.IsValid)
             {
-                return BadRequest(new ErrorResponse { Message = "El estado ingresado no es valido" });
-            }
+                var errors = ModelState.Values
+                    .SelectMany(v => v.Errors)
+                    .Select(e => e.ErrorMessage)
+                    .ToList();
 
-            if (filters.CreateBy.HasValue && filters.CreateBy <= 0)
-            {
-                return BadRequest(new ErrorResponse { Message = "El ID del creador debe ser mayor a 0" });
-            }
-
-            if (filters.ApproverUserId.HasValue && filters.ApproverUserId <= 0)
-            {
-                return BadRequest(new ErrorResponse { Message = "El ID del aprobador debe ser mayor a 0" });
+                return BadRequest(new ErrorResponse { Message = string.Join(" | ", errors) });
             }
 
             var proposals = await _proposalFilterService.GetFilteredAsync(filters);
@@ -107,7 +106,7 @@ namespace Infrastructure.Controllers
             return Ok(proposalDtos);
         }
         
-        [HttpPut("{id}")]
+        [HttpPatch("{id}")]
         [ProducesResponseType(typeof(ProjectProposalDto), StatusCodes.Status200OK)]
         [ProducesResponseType(typeof(ErrorResponse), StatusCodes.Status400BadRequest)]
         [ProducesResponseType(typeof(ErrorResponse), StatusCodes.Status404NotFound)]
@@ -121,7 +120,7 @@ namespace Infrastructure.Controllers
 
                 var steps = await _stepService.GetStepsByProjectIdAsync(updatedProposal.Id);
                 var proposalDto = _mapper.Map<ProjectProposalDto>(updatedProposal);
-                proposalDto.ApprovalSteps = _mapper.Map<List<ProjectApprovalStepDto>>(steps);
+                proposalDto.Steps = _mapper.Map<List<ProjectApprovalStepDto>>(steps);
 
                 return Ok(proposalDto);
             }

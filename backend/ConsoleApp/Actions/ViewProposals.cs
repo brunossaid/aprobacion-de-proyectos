@@ -20,7 +20,7 @@ public static class ViewProposals
             Console.ResetColor();
 
             var filterService = services.GetRequiredService<ProposalFilterService>();
-            var filters = new ProjectProposalFilterDto { CreateBy = currentUser.Id };
+            var filters = new ProjectProposalFilterDto { Applicant = currentUser.Id };
             var userProposals = await filterService.GetFilteredAsync(filters);
 
             if(userProposals.Count == 0)

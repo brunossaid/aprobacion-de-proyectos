@@ -15,9 +15,9 @@ namespace Infrastructure.Controllers
     {
         private readonly ApprovalStepManager _approvalStepManager;
         private readonly IMapper _mapper;
-        private readonly IProjectApprovalStepReader _stepService; 
+        private readonly IProjectApprovalStepReader _stepService;
 
-        public ProjectApprovalStepController(ApprovalStepManager approvalStepManager, IProjectApprovalStepReader stepService,  IMapper mapper)
+        public ProjectApprovalStepController(ApprovalStepManager approvalStepManager, IProjectApprovalStepReader stepService, IMapper mapper)
         {
             _approvalStepManager = approvalStepManager;
             _stepService = stepService;
@@ -32,15 +32,26 @@ namespace Infrastructure.Controllers
         [SwaggerOperation(Summary = "Actualizar estado de un paso de propuesta de proyecto")]
         public async Task<IActionResult> UpdateStatus([FromRoute] Guid id, [FromBody] DecisionDto dto)
         {
+            if (!ModelState.IsValid)
+            {
+                var errors = ModelState.Values
+                    .SelectMany(v => v.Errors)
+                    .Select(e => e.ErrorMessage)
+                    .ToList();
+
+                return BadRequest(new ErrorResponse
+                {
+                    Message = string.Join(" | ", errors)
+                });
+            }
+
             try
             {
                 var updatedProject = await _approvalStepManager.DecideNextStepAsync(id, dto);
-                Console.WriteLine("updatedProject", updatedProject);
-
                 var proposalDto = _mapper.Map<ProjectProposalDto>(updatedProject);
 
                 var steps = await _stepService.GetStepsByProjectIdAsync(updatedProject.Id);
-                proposalDto.ApprovalSteps = _mapper.Map<List<ProjectApprovalStepDto>>(steps);
+                proposalDto.Steps = _mapper.Map<List<ProjectApprovalStepDto>>(steps);
 
                 return Ok(proposalDto);
             }

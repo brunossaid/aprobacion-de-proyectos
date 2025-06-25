@@ -18,5 +18,10 @@ namespace Infrastructure.Services
         {
             return await _context.ProjectType.ToListAsync();
         }
+
+        public async Task<ProjectType?> GetByIdAsync(int id)
+        {
+            return await _context.ProjectType.FirstOrDefaultAsync(a => a.Id == id);
+        }
     }
 }

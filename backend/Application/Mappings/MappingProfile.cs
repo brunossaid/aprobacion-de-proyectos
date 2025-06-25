@@ -33,13 +33,15 @@ namespace Application.Mappings
             CreateMap<ProjectProposal, ProjectProposalDto>()
                 .ForMember(dest => dest.Area, opt => opt.MapFrom(src => src.AreaNavigation))
                 .ForMember(dest => dest.Type, opt => opt.MapFrom(src => src.TypeNavigation))
+                .ForMember(dest => dest.Amount, opt => opt.MapFrom(src => src.EstimatedAmount))
+                .ForMember(dest => dest.Duration, opt => opt.MapFrom(src => src.EstimatedDuration))
                 .ForMember(dest => dest.Status, opt => opt.MapFrom(src => src.StatusNavigation))
-                .ForMember(dest => dest.CreateBy, opt => opt.MapFrom(src => src.CreateByNavigation));
+                .ForMember(dest => dest.User, opt => opt.MapFrom(src => src.CreateByNavigation));
 
             CreateMap<CreateProjectProposalDto, ProjectProposal>()
                 .ForMember(dest => dest.Area, opt => opt.MapFrom(src => src.Area))
-                .ForMember(dest => dest.Type, opt => opt.MapFrom(src => src.ProjectType))
-                .ForMember(dest => dest.CreateBy, opt => opt.MapFrom(src => src.CreateBy));
+                .ForMember(dest => dest.Type, opt => opt.MapFrom(src => src.Type))
+                .ForMember(dest => dest.CreateBy, opt => opt.MapFrom(src => src.User));
 
             CreateMap<ProjectApprovalStep, ProjectApprovalStepDto>()
                 .ForMember(dest => dest.Id, opt => opt.MapFrom(src => src.Id))

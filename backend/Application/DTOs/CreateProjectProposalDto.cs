@@ -2,10 +2,9 @@ public class CreateProjectProposalDto
 {
     public string Title { get; set; } = null!;
     public string Description { get; set; } = null!;
-    public decimal EstimatedAmount { get; set; }
-    public int EstimatedDuration { get; set; }
+    public decimal Amount { get; set; }
+    public int Duration { get; set; }
     public int Area { get; set; }
-    public int ProjectType { get; set; }
-    public int CreateBy { get; set; }
-    
+    public int User { get; set; }
+    public int Type { get; set; }
 }

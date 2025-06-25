@@ -4,6 +4,8 @@ using Infrastructure.Services;
 using Microsoft.EntityFrameworkCore;
 using Application.Mappings;
 using Application.Services;
+using FluentValidation;
+using FluentValidation.AspNetCore;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -22,11 +24,11 @@ builder.Services.AddCors(options =>
                       });
 });
 
-builder.Services.AddControllers()
-    .ConfigureApiBehaviorOptions(options =>
-    {
-        options.SuppressModelStateInvalidFilter = true;
-    });
+builder.Services.AddControllers();
+builder.Services.AddFluentValidationAutoValidation();
+builder.Services.AddFluentValidationClientsideAdapters();
+builder.Services.AddValidatorsFromAssembly(typeof(Application.Validators.CreateProjectProposalDtoValidator).Assembly);
+
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 builder.Services.AddSwaggerGen(c =>{c.EnableAnnotations();});

@@ -34,14 +34,14 @@ namespace Application.Services
                 query = query.Where(p => p.Status == filters.Status.Value);
             }
 
-            if (filters.CreateBy.HasValue)
+            if (filters.Applicant.HasValue)
             {
-                query = query.Where(p => p.CreateBy == filters.CreateBy.Value);
+                query = query.Where(p => p.CreateBy == filters.Applicant.Value);
             }
 
-            if (filters.ApproverUserId.HasValue)
+            if (filters.ApprovalUser.HasValue)
             {
-                var pendingSteps = await _approvalStepManager.GetPendingStepsForUserAsync(filters.ApproverUserId.Value);
+                var pendingSteps = await _approvalStepManager.GetPendingStepsForUserAsync(filters.ApprovalUser.Value);
 
                 var approvableProposalIds = pendingSteps
                     .Select(step => step.ProjectProposalId)
