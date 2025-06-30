@@ -1,5 +1,6 @@
 import { updateProjectProposal } from "../api/index.js";
 import { loadProposalData } from "./load.js";
+import { showAlert } from "../utils.js";
 
 // botones de edicion de proyecto
 export function setupEditHandlers() {
@@ -71,6 +72,7 @@ async function saveEditedProposal(e) {
 
   try {
     await updateProjectProposal(id, updatedData);
+    showAlert(`Solicitud de proyecto actualizada.`, "success");
 
     console.log("solicitud actualizada");
 
@@ -90,7 +92,7 @@ async function saveEditedProposal(e) {
     await loadProposalData(id);
   } catch (err) {
     console.error("error:", err);
-    alert(err.message);
+    showAlert(`Error: ${err.message}`, "error");
   }
 }
 

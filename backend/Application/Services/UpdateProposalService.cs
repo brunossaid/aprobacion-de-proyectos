@@ -46,7 +46,9 @@ namespace Application.Services
 
             project.Status = 1; // pending
             await _proposalWriter.UpdateAsync(project);
-            return project;
+            
+            var createdProposal = await _proposalReader.GetByIdAsync(project.Id);
+            return createdProposal!;
         }
     }
 }

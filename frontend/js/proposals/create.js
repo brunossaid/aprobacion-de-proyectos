@@ -4,6 +4,7 @@ import {
   getProjectTypes,
 } from "../api/index.js";
 import { loadPage } from "../navigation.js";
+import { showAlert } from "../utils.js";
 
 export async function setupCreateProposalForm() {
   await loadSelectOptions();
@@ -50,23 +51,23 @@ async function handleSubmit(e) {
   const data = {
     title: form.title.value,
     description: form.description.value,
-    estimatedAmount: parseFloat(form.estimatedAmount.value),
-    estimatedDuration: parseInt(form.estimatedDuration.value),
+    amount: parseFloat(form.estimatedAmount.value),
+    duration: parseInt(form.estimatedDuration.value),
     area: parseInt(form.area.value),
-    projectType: parseInt(form.type.value),
-    createBy: user.id,
+    type: parseInt(form.type.value),
+    user: user.id,
   };
 
   try {
     const result = await createProjectProposal(data);
 
-    alert("Solicitud creada con exito");
+    showAlert("Solicitud de proyecto creada con exito", "success");
     console.log("solicitud creada");
     displayCreatedProposal(result);
     form.reset();
   } catch (error) {
     console.error("error en la solicitud", error);
-    alert("Error al conectar con el servidor");
+    showAlert(error, "error");
   }
 }
 
@@ -90,9 +91,9 @@ function displayCreatedProposal(proposal) {
     description: proposal.description,
     type: proposal.type.name,
     area: proposal.area.name,
-    estimatedAmount: `$ ${proposal.estimatedAmount.toFixed(2)}`,
-    estimatedDuration: `${proposal.estimatedDuration} meses`,
-    createBy: proposal.createBy.name,
+    estimatedAmount: `$ ${proposal.amount.toFixed(2)}`,
+    estimatedDuration: `${proposal.duration} meses`,
+    createBy: proposal.user.name,
   };
 
   const viewBtn = document.getElementById("view-proposal-btn");

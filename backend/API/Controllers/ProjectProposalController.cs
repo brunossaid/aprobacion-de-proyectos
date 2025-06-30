@@ -17,7 +17,7 @@ namespace Infrastructure.Controllers
         private readonly ProposalFilterService _proposalFilterService;
         private readonly IProjectApprovalStepReader _stepService;
         private readonly UpdateProposalService _updateProposalService;
-        private readonly IMapper _mapper;
+        private readonly ProposalDtoBuilderService _proposalDtoBuilderService;
 
         public ProjectProposalController(
             IProposalCreationService proposalCreationService,
@@ -25,14 +25,14 @@ namespace Infrastructure.Controllers
             ProposalFilterService proposalFilterService,
             IProjectApprovalStepReader stepService,
             UpdateProposalService updateProposalService,
-            IMapper mapper)
+            ProposalDtoBuilderService proposalDtoBuilderService)
         {
             _proposalCreationService = proposalCreationService;
             _proposalService = proposalService;
             _proposalFilterService = proposalFilterService;
             _stepService = stepService;
             _updateProposalService = updateProposalService;
-            _mapper = mapper;
+            _proposalDtoBuilderService = proposalDtoBuilderService;
         }
 
         [HttpPost]
@@ -50,10 +50,7 @@ namespace Infrastructure.Controllers
             try
             {
                 var proposal = await _proposalCreationService.CreateProposalAsync(dto);
-                var proposalDto = _mapper.Map<ProjectProposalDto>(proposal);
-
-                var steps = await _stepService.GetStepsByProjectIdAsync(proposal.Id);
-                proposalDto.Steps = _mapper.Map<List<ProjectApprovalStepDto>>(steps);
+                var proposalDto = await _proposalDtoBuilderService.BuildAsync(proposal);
 
                 return CreatedAtAction(nameof(GetProposalById), new { id = proposal.Id }, proposalDto);
             }
@@ -78,9 +75,8 @@ namespace Infrastructure.Controllers
             if (proposal == null)
                 return NotFound(new ErrorResponse { Message = "No se encontro la propuesta solicitada" });
 
-            var steps = await _stepService.GetStepsByProjectIdAsync(id);
-            var proposalDto = _mapper.Map<ProjectProposalDto>(proposal);
-            proposalDto.Steps = _mapper.Map<List<ProjectApprovalStepDto>>(steps);
+            var proposalDto = await _proposalDtoBuilderService.BuildAsync(proposal);
+
             return Ok(proposalDto);
         }
 
@@ -100,8 +96,7 @@ namespace Infrastructure.Controllers
                 return BadRequest(new ErrorResponse { Message = string.Join(" | ", errors) });
             }
 
-            var proposals = await _proposalFilterService.GetFilteredAsync(filters);
-            var proposalDtos = _mapper.Map<List<ProjectProposalListDto>>(proposals);
+            var proposalDtos = await _proposalFilterService.GetFilteredDtoAsync(filters);
 
             return Ok(proposalDtos);
         }
@@ -118,9 +113,7 @@ namespace Infrastructure.Controllers
             {
                 var updatedProposal = await _updateProposalService.UpdateProposalAsync(id, dto);
 
-                var steps = await _stepService.GetStepsByProjectIdAsync(updatedProposal.Id);
-                var proposalDto = _mapper.Map<ProjectProposalDto>(updatedProposal);
-                proposalDto.Steps = _mapper.Map<List<ProjectApprovalStepDto>>(steps);
+                var proposalDto = await _proposalDtoBuilderService.BuildAsync(updatedProposal);
 
                 return Ok(proposalDto);
             }

@@ -19,7 +19,7 @@ export async function createProjectProposal(data) {
 
 export async function updateProjectProposal(id, updatedData) {
   const response = await fetch(`http://localhost:5103/api/Project/${id}`, {
-    method: "PUT",
+    method: "PATCH",
     headers: {
       "Content-Type": "application/json",
     },
@@ -39,7 +39,7 @@ export async function saveApprovalDecision(proposalId, reviewData) {
   const response = await fetch(
     `http://localhost:5103/api/Project/${proposalId}/decision`,
     {
-      method: "PUT",
+      method: "PATCH",
       headers: {
         "Content-Type": "application/json",
       },
@@ -62,8 +62,8 @@ export async function getFilteredProposals(filters = {}) {
   const params = new URLSearchParams();
   if (title) params.append("title", title);
   if (status) params.append("status", status);
-  if (createBy) params.append("createBy", createBy);
-  if (approverUserId) params.append("approverUserId", approverUserId);
+  if (createBy) params.append("applicant", createBy);
+  if (approverUserId) params.append("approvalUser", approverUserId);
 
   const response = await fetch(`http://localhost:5103/api/Project?${params}`);
 

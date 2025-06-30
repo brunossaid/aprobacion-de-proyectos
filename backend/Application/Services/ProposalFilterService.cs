@@ -1,6 +1,7 @@
 using Application.DTOs;
 using Application.Interfaces;
 using Domain.Entities;
+using AutoMapper;
 
 namespace Application.Services
 {
@@ -8,20 +9,22 @@ namespace Application.Services
     {
         private readonly IProjectProposalReader _proposalReader;
         private readonly ApprovalStepManager _approvalStepManager;
+        private readonly IMapper _mapper;
 
         public ProposalFilterService(
             IProjectProposalReader proposalReader,
-            ApprovalStepManager approvalStepManager 
-        )
+            ApprovalStepManager approvalStepManager,
+            IMapper mapper)
         {
             _proposalReader = proposalReader;
             _approvalStepManager = approvalStepManager;
+            _mapper = mapper;
         }
 
         public async Task<List<ProjectProposal>> GetFilteredAsync(ProjectProposalFilterDto filters)
         {
             var proposals = await _proposalReader.GetAllAsync();
-            
+
             var query = proposals.AsQueryable();
 
             if (!string.IsNullOrWhiteSpace(filters.Title))
@@ -52,6 +55,12 @@ namespace Application.Services
             }
 
             return query.ToList();
+        }
+        
+        public async Task<List<ProjectProposalListDto>> GetFilteredDtoAsync(ProjectProposalFilterDto filters)
+        {
+            var proposals = await GetFilteredAsync(filters);
+            return _mapper.Map<List<ProjectProposalListDto>>(proposals);
         }
     }
 }

@@ -6,6 +6,8 @@ using Application.Mappings;
 using Application.Services;
 using FluentValidation;
 using FluentValidation.AspNetCore;
+using Microsoft.AspNetCore.Mvc;
+using Application.DTOs;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -25,12 +27,29 @@ builder.Services.AddCors(options =>
 });
 
 builder.Services.AddControllers();
+builder.Services.Configure<ApiBehaviorOptions>(options =>
+{
+    options.InvalidModelStateResponseFactory = context =>
+    {
+        var errors = context.ModelState
+            .Values
+            .SelectMany(v => v.Errors)
+            .Select(e => e.ErrorMessage)
+            .ToList();
+
+        var response = new ErrorResponse
+        {
+            Message = string.Join(" | ", errors)
+        };
+
+        return new BadRequestObjectResult(response);
+    };
+});
 builder.Services.AddFluentValidationAutoValidation();
 builder.Services.AddFluentValidationClientsideAdapters();
 builder.Services.AddValidatorsFromAssembly(typeof(Application.Validators.CreateProjectProposalDtoValidator).Assembly);
 
 builder.Services.AddEndpointsApiExplorer();
-builder.Services.AddSwaggerGen();
 builder.Services.AddSwaggerGen(c =>{c.EnableAnnotations();});
 builder.Services.AddAutoMapper(typeof(MappingProfile));
 builder.Services.AddDbContext<AppDbContext>(options =>
@@ -50,6 +69,8 @@ builder.Services.AddScoped<IProjectProposalWriter, ProjectProposalService>();
 builder.Services.AddScoped<IProposalCreationService, ProposalCreationService>();
 builder.Services.AddScoped<ProposalFilterService>();
 builder.Services.AddScoped<ApprovalStepManager>();
+builder.Services.AddScoped<DecisionService>();
+builder.Services.AddScoped<ProposalDtoBuilderService>();
 builder.Services.AddScoped<UpdateProposalService>();
 
 

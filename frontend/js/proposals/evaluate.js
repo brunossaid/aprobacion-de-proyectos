@@ -1,5 +1,5 @@
 import { getStatuses, saveApprovalDecision } from "../api/index.js";
-import { translateStatus } from "../utils.js";
+import { translateStatus, showAlert } from "../utils.js";
 import { loadProposalData } from "./load.js";
 
 // botones de evaluacion de proyecto
@@ -76,12 +76,12 @@ async function saveApprovalStep() {
 
   try {
     await saveApprovalDecision(proposalId, reviewData);
-
+    showAlert(`Evaluacion guardada`, "success");
     console.log("evaluacion guardada");
     document.getElementById("observation").value = "";
-  } catch (error) {
-    console.error("error:", error);
-    alert(error.message);
+  } catch (err) {
+    console.error("error:", err);
+    showAlert(`Error: ${err.message}`, "error");
   }
   await loadProposalData(proposalId);
 }

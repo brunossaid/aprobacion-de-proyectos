@@ -13,18 +13,14 @@ namespace Infrastructure.Controllers
     [Tags("Project")]
     public class ProjectApprovalStepController : ControllerBase
     {
-        private readonly ApprovalStepManager _approvalStepManager;
-        private readonly IMapper _mapper;
-        private readonly IProjectApprovalStepReader _stepService;
+        private readonly DecisionService _decisionService;
 
-        public ProjectApprovalStepController(ApprovalStepManager approvalStepManager, IProjectApprovalStepReader stepService, IMapper mapper)
+        public ProjectApprovalStepController(DecisionService decisionService)
         {
-            _approvalStepManager = approvalStepManager;
-            _stepService = stepService;
-            _mapper = mapper;
+            _decisionService = decisionService;
         }
 
-        [HttpPut("{id}/decision")]
+        [HttpPatch("{id}/decision")]
         [ProducesResponseType(typeof(ProjectProposalDto), StatusCodes.Status200OK)]
         [ProducesResponseType(typeof(ErrorResponse), StatusCodes.Status400BadRequest)]
         [ProducesResponseType(typeof(ErrorResponse), StatusCodes.Status404NotFound)]
@@ -47,12 +43,7 @@ namespace Infrastructure.Controllers
 
             try
             {
-                var updatedProject = await _approvalStepManager.DecideNextStepAsync(id, dto);
-                var proposalDto = _mapper.Map<ProjectProposalDto>(updatedProject);
-
-                var steps = await _stepService.GetStepsByProjectIdAsync(updatedProject.Id);
-                proposalDto.Steps = _mapper.Map<List<ProjectApprovalStepDto>>(steps);
-
+                var proposalDto = await _decisionService.DecideAsync(id, dto);
                 return Ok(proposalDto);
             }
             catch (KeyNotFoundException ex)

@@ -26,13 +26,9 @@ function fillProposalForm(proposal) {
   document.getElementById("description").value = proposal.description;
   document.getElementById("type").value = proposal.type.name;
   document.getElementById("area").value = proposal.area.name;
-  document.getElementById(
-    "estimatedAmount"
-  ).value = `$ ${proposal.estimatedAmount}`;
-  document.getElementById("estimatedDuration").value =
-    proposal.estimatedDuration;
-  document.getElementById("createBy").value = proposal.createBy.name;
-  document.getElementById("createAt").value = formatDate(proposal.createAt);
+  document.getElementById("estimatedAmount").value = `$ ${proposal.amount}`;
+  document.getElementById("estimatedDuration").value = proposal.duration;
+  document.getElementById("createBy").value = proposal.user.name;
 
   const statusInput = document.getElementById("status");
   statusInput.value = translateStatus(proposal.status.name);
@@ -44,7 +40,7 @@ function fillProposalForm(proposal) {
   const editBtn = document.getElementById("edit-btn");
   const editActions = editBtn.nextElementSibling;
 
-  if (proposal.status.id === 4 && proposal.createBy.id === user.id) {
+  if (proposal.status.id === 4 && proposal.user.id === user.id) {
     editBtn.classList.remove("hidden");
   } else {
     editBtn.classList.add("hidden");
@@ -52,9 +48,9 @@ function fillProposalForm(proposal) {
   }
 
   if (proposal.status.id !== 3) {
-    storeNextApprovalStepId(proposal.approvalSteps);
+    storeNextApprovalStepId(proposal.steps);
   }
-  fillApprovalSteps(proposal.approvalSteps);
+  fillApprovalSteps(proposal.steps);
 }
 
 function fillApprovalSteps(steps) {

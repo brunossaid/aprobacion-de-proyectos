@@ -96,7 +96,10 @@ public class ApprovalStepManager
                 throw new InvalidOperationException("Estado invalido.");
         }
 
-        return project;
+        var refreshedProject = await _proposalReader.GetByIdAsync(projectId);
+        if (refreshedProject == null)
+            throw new InvalidOperationException("No se pudo recuperar el proyecto actualizado.");
+        return refreshedProject;
     }
 
     public async Task<List<ProjectApprovalStep>> GetPendingStepsForUserAsync(int userId)
