@@ -29,7 +29,7 @@ input[type="number"]::-webkit-inner-spin-button {
 @keyframes fadein {
   from {
     opacity: 0;
-    transform: translateY(-10px);
+    transform: translateY(20px);
   }
   to {
     opacity: 1;
@@ -44,10 +44,10 @@ input[type="number"]::-webkit-inner-spin-button {
   }
   to {
     opacity: 0;
-    transform: translateY(-10px);
+    transform: translateY(20px);
   }
 }
-
 .animate-fade-in-out {
   animation: fadein 0.3s ease, fadeout 0.3s ease 2.7s;
+  animation-fill-mode: forwards;
 }
