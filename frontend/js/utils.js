@@ -10,24 +10,24 @@ export function formatDate(isoString) {
 // colores de fondo por estado
 export function getRowBgClass(statusName) {
   const statusColorMap = {
-    Pending: "bg-orange-400 dark:bg-orange-500",
-    Approved: "bg-green-300 dark:bg-green-700",
-    Rejected: "bg-red-400 dark:bg-red-600",
-    Observed: "bg-blue-300 dark:bg-sky-600",
+    Pending: "bg-orange-300 dark:bg-orange-400",
+    Approved: "bg-green-300 dark:bg-green-500",
+    Rejected: "bg-red-400 dark:bg-red-500",
+    Observed: "bg-blue-300 dark:bg-sky-400",
   };
 
   return statusColorMap[statusName] || "";
 }
 
 export const bg_classes = [
-  "bg-orange-400",
-  "dark:bg-orange-500",
+  "bg-orange-300",
+  "dark:bg-orange-400",
   "bg-green-300",
-  "dark:bg-green-700",
+  "dark:bg-green-500",
   "bg-red-400",
-  "dark:bg-red-600",
+  "dark:bg-red-500",
   "bg-blue-300",
-  "dark:bg-sky-600",
+  "dark:bg-sky-400",
 ];
 
 export function translateStatus(statusName) {
