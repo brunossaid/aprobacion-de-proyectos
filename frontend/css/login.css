@@ -1,0 +1,113 @@
+/* bg */
+.login-section {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding-top: 160px;
+}
+
+/* logo*/
+.login-header {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin-bottom: 1rem;
+}
+
+.logo-light {
+  display: block;
+  width: 10rem;
+}
+
+.logo-dark {
+  display: none;
+  width: 10rem;
+}
+
+/* titulo */
+.main-title {
+  font-size: 2.25rem;
+  font-weight: 600;
+  color: black;
+  margin-top: 0.2rem;
+  text-align: center;
+}
+
+/* form de login */
+.login-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 1.5rem;
+  width: 100%;
+  max-width: 28rem;
+}
+
+.login-title {
+  font-size: 1.875rem;
+}
+
+.login-form {
+  width: 100%;
+}
+
+.user-select {
+  width: 100%;
+  font-size: 1.25rem;
+  border: 1px solid transparent;
+  border-radius: 0.5rem;
+  padding: 0.75rem 1rem;
+  background-color: #e5e5e5;
+  transition: all 0.3s ease;
+  appearance: none;
+  cursor: pointer;
+}
+
+.user-select:focus {
+  outline: none;
+  border-color: #0f766e; /* teal-800 */
+}
+
+.user-select:hover {
+  border-color: #a3a3a3; /* neutral-400 */
+}
+
+.login-button {
+  margin-top: 1.5rem;
+  width: 100%;
+  background-color: #0f766e;
+  color: white;
+  font-size: 1.125rem;
+  font-weight: 500;
+  padding: 0.5rem 0;
+  border: none;
+  border-radius: 0.5rem;
+  transition: background-color 0.3s ease;
+  cursor: pointer;
+}
+
+.login-button:hover {
+  background-color: #0d9488; /* teal-600 */
+}
+
+/* === MODO OSCURO === */
+.dark .logo-light {
+  display: none;
+}
+
+.dark .logo-dark {
+  display: block;
+}
+
+.dark .main-title {
+  color: white;
+}
+
+.dark .user-select {
+  background-color: #1c1917; /* stone-800 */
+  color: white;
+}
+
+.dark .login-container {
+  color: white;
+}

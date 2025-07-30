@@ -1,33 +1,22 @@
-<section class="flex flex-col items-center pt-[160px]">
-  <div class="flex flex-col items-center mb-6">
-    <img
-      src="img/ap-logo-black.png"
-      alt="logo"
-      class="block dark:hidden w-40"
-    />
-    <img src="img/ap-logo.png" alt="logo" class="hidden dark:block w-40" />
-    <h1 class="text-4xl font-semibold text-black dark:text-white mt-2">
-      Aprobacion de Proyectos
-    </h1>
+<section class="login-section">
+  <div class="login-header">
+    <img src="img/ap-logo-black.png" alt="logo" class="logo-light" />
+    <img src="img/ap-logo.png" alt="logo" class="logo-dark" />
+    <h1 class="main-title">Aprobacion de Proyectos</h1>
   </div>
 
-  <div class="flex flex-col items-center gap-6 w-full max-w-md">
-    <h1 class="text-3xl">Iniciar Sesion</h1>
+  <div class="login-container">
+    <h1 class="login-title">Iniciar Sesion</h1>
 
-    <form id="auth-form" class="w-full">
+    <form id="auth-form" class="login-form">
       <select
         id="user-select"
         name="user"
         required
-        class="w-full text-xl border border-transparent rounded-lg px-4 py-3 transition duration-300 bg-neutral-200 dark:bg-stone-800 focus:outline-none focus:border-teal-800 hover:border-neutral-400 appearance-none cursor-pointer"
+        class="user-select"
       ></select>
 
-      <button
-        type="submit"
-        class="mt-6 w-full bg-teal-800 hover:bg-teal-600 text-white text-lg font-medium py-2 rounded-lg transition duration-300"
-      >
-        Ingresar
-      </button>
+      <button type="submit" class="login-button">Ingresar</button>
     </form>
   </div>
 </section>
