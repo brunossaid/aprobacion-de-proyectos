@@ -1,6 +1,10 @@
-# Aprobación de Proyectos – Frontend
+# Aprobación de Proyectos
 
-Esta es la **tercera y ultima etapa** del proyecto, centrada en el desarrollo del **Frontend** de una aplicación para la gestion y aprobacion de proyectos.
+Sistema completo para gestión y aprobación de proyectos internos dentro de una organización.
+Permite registrar propuestas, generar flujos dinámicos de aprobación según reglas configuradas, realizar revisiones, y visualizar el estado completo del ciclo de vida del proyecto.
+
+Desarrollado para la materia Proyecto de Software (UNAJ).
+El proyecto incluye Backend (API REST) + Frontend Web + Base de Datos con ORM.
 
 ## 📄 Descripcion
 
@@ -11,10 +15,38 @@ Se desarrollo una interfaz web que permite a los usuarios:
 - Evaluar y editar propuestas  
 - Realizar búsquedas con filtros personalizados
 
-La aplicacion es **100% responsive**, adaptandose correctamente a distintos tamaños de pantalla, y cuenta con **soporte para modo claro y oscuro**.
+La aplicacion es **100% responsive** y cuenta con **modo claro/oscuro**, permitiendo un uso comodo en cualquier dispositivo.
 
 ## 🛠️ Tecnologías utilizadas
-
-- **HTML**, **CSS** y **JavaScript puro**
+### Frontend
+- **HTML**, **CSS** y **JavaScript**
 - **Tailwind CSS** para el diseño de la interfaz
 - **Bootstrap Icons** para los iconos
+### Backend
+- **C#**
+- **EF Core** (SQL Server)
+- **Swagger**
+
+El código sigue estrictamente los principios SOLID y la estructura de Clean Architecture, separando responsabilidades y garantizando mantenibilidad y escalabilidad.
+
+## 📷 Capturas
+
+### Home
+![Home](./img/readme/home.png)
+
+### Crear Solicitud de Proyecto (con modo claro activado)
+![Crear Solicitud](./img/readme/crear-solicitud.png)
+
+### Mis Solicitudes
+![Mis Solicitudes](./img/readme/mis-solicitudes.png)
+
+### Solicitud de Proyecto
+![Solicitud](./img/readme/solicitud.png)
+
+### Revisar Solicitudes (Aprobador)
+![Revisar Solicitudes](./img/readme/revisar.png)
+
+### Usuario
+![Usuario](./img/readme/usuario.png)
+
+
